@@ -30,6 +30,6 @@
 //     SHOPARIZE_API().init(SHOPARIZEPARTNER_SHOP_ID);
 // });
 
-window.onload = function () {
+window.addEventListener('load', function () {
     SHOPARIZE_API().init(SHOPARIZEPARTNER_SHOP_ID);
-}
+});
