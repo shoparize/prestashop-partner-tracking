@@ -29,7 +29,7 @@
         <strong>{l s='Description' mod='shoparizepartner'}</strong><br />
         {l s='Shoparize’s superior customer service, with a merchant portal to feed and campaign optimization tools, easily adapts to merchant’s needs to drive incremental revenue, even while operating alongside another CSS.
         Shoparize’s intelligent e-commerce platform is built to grow your business. We maximize our merchant’s online performance by giving shoppers the best online shopping experience.' mod='shoparizepartner'}<br />
-        {l s='A Premium Google CSS Partner that offers Managed and Self-Service CSS with a high traffic Comparison Shopping website listing. The Shoparize Partner Tracking extension allows for seamless integration of our core systems within WooCommerce.
+        {l s='A Premium Google CSS Partner that offers Managed and Self-Service CSS with a high traffic Comparison Shopping website listing. The Shoparize Partner Tracking extension allows for seamless integration of our core systems within Prestashop.
         This plugin uses the [Shoparize Partner API]' mod='shoparizepartner'}(<a href="https://partner.shoparize.com">https://partner.shoparize.com</a>) {l s='to track clicks and conversions on page visits and purchases. Please also see our [privacy policy.]' mod='shoparizepartner'}(<a href="https://partner.shoparize.com/privacy">https://partner.shoparize.com/privacy</a>) {l s='for detailed information.' mod='shoparizepartner'}
     </p>
     <br />
