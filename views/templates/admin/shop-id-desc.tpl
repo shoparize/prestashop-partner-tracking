@@ -24,7 +24,7 @@
 *}
 
 <p>
-    {l s="By entering your shop ID and click Save Changes, your WooCommerce store will be automatically set up for Shoparize Partner." mod='shoparizepartner'}
+    {l s="By entering your shop ID and click Save Changes, your Prestashop store will be automatically set up for Shoparize Partner." mod='shoparizepartner'}
     <br>
     {l s="If you don't have a shop ID please sign up to the Shoparize network first to receive your shop ID, via" mod='shoparizepartner' } <a href="https://partner.shoparize.com/">https://partner.shoparize.com/</a>
 </p>
