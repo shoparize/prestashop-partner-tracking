@@ -233,7 +233,7 @@ class Shoparizepartner extends Module
                 'modules/' . $this->name . '/views/js/shoparizepartner_all_front.js'
             );
 
-            if ('orderconfirmation' == Dispatcher::getInstance()->getController()) {
+            if ('orderconfirmation' == Dispatcher::getInstance()->getController() || 'order-confirmation' == Dispatcher::getInstance()->getController()) {
                 // get order
                 $id_order = Tools::getValue('id_order');
                 $order = new Order($id_order, $this->context->language->id);
