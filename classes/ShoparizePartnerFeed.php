@@ -1,5 +1,27 @@
 <?php
-
+/**
+ * 2007-2023 PrestaShop.
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Academic Free License (AFL 3.0)
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://opensource.org/licenses/afl-3.0.php
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@prestashop.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
+ * versions in the future. If you wish to customize PrestaShop for your
+ * needs please refer to http://www.prestashop.com for more information.
+ *
+ * @author    shoparize <contact@prestashop.com>
+ * @copyright 2007-2023 shoparize
+ * @license   http://www.gnu.org/licenses/gpl-3.0.html (GPLv3 or later License)
+ */
 class ShoparizePartnerFeed
 {
     protected $csvHelper;
@@ -31,10 +53,16 @@ class ShoparizePartnerFeed
                 );
 
                 $idLang = Configuration::get('PS_LANG_DEFAULT', null, null, $shop['id_shop']);
-                $currency = new Currency(Configuration::get('PS_CURRENCY_DEFAULT', null, null, $shop['id_shop']), $idLang, $shop['id_shop']);
+                $currency = new Currency(
+                    Configuration::get('PS_CURRENCY_DEFAULT', null, null, $shop['id_shop']),
+                    $idLang,
+                    $shop['id_shop']
+                );
                 foreach ($rows as $row) {
                     $product = new Product($row['id_product'], false, $idLang, $shop['id_shop']);
-                    $images = $product->getImages(Configuration::get('PS_LANG_DEFAULT', $idLang, null, $shop['id_shop']));
+                    $images = $product->getImages(
+                        Configuration::get('PS_LANG_DEFAULT', $idLang, null, $shop['id_shop'])
+                    );
                     $coverImage = $this->findCoverImage($images);
                     $additionalImageLink = $this->getAdditionalImageUrl($product->name, $images);
                     $productLink = Context::getContext()->link->getProductLink(
@@ -46,14 +74,18 @@ class ShoparizePartnerFeed
                         $shop['id_shop']
                     );
                     $row = [
-                        ShoparizePartnerCsvHelper::ORDER_ID => sprintf('%s_%d', Configuration::get('SHOPARIZEPARTNER_SHOP_ID', null, null, $shop['id_shop']), $product->id),
+                        ShoparizePartnerCsvHelper::ORDER_ID => sprintf(
+                            '%s_%d',
+                            Configuration::get('SHOPARIZEPARTNER_SHOP_ID', null, null, $shop['id_shop']),
+                            $product->id
+                        ),
                         ShoparizePartnerCsvHelper::ORDER_TITLE => $product->name,
                         ShoparizePartnerCsvHelper::ORDER_DESCRIPTION => strip_tags($product->description),
                         ShoparizePartnerCsvHelper::ORDER_LINK => $productLink,
                         ShoparizePartnerCsvHelper::ORDER_IMAGE_LINK => Context::getContext()->link->getImageLink(
                             $product->link_rewrite,
                             $coverImage['id_image'],
-                            'large_default'
+                            ImageType::getFormattedName('large')
                         ),
                         ShoparizePartnerCsvHelper::ORDER_ADDITIONAL_IMAGE_LINK => $additionalImageLink[0] ?? '',
                         ShoparizePartnerCsvHelper::ORDER_ADDITIONAL_IMAGE_LINK_2 => $additionalImageLink[1] ?? '',
@@ -66,11 +98,18 @@ class ShoparizePartnerFeed
                         ShoparizePartnerCsvHelper::ORDER_ADDITIONAL_IMAGE_LINK_9 => $additionalImageLink[8] ?? '',
                         ShoparizePartnerCsvHelper::ORDER_ADDITIONAL_IMAGE_LINK_10 => $additionalImageLink[9] ?? '',
                         ShoparizePartnerCsvHelper::ORDER_MOBILE_LINK => $productLink,
-                        ShoparizePartnerCsvHelper::ORDER_AVAILABILITY =>
-                            StockAvailable::getStockAvailableIdByProductId($product->id, null, $shop['id_shop']) > 0
-                                ? self::AVAILABILITY_IN_STOCK
-                                : self::AVAILABILITY_OUT_OF_STOCK,
-                        ShoparizePartnerCsvHelper::ORDER_PRICE => sprintf('%.2f %s', $product->price, $currency->iso_code),
+                        ShoparizePartnerCsvHelper::ORDER_AVAILABILITY => StockAvailable::getStockAvailableIdByProductId(
+                            $product->id,
+                            null,
+                            $shop['id_shop']
+                        ) > 0
+                            ? self::AVAILABILITY_IN_STOCK
+                            : self::AVAILABILITY_OUT_OF_STOCK,
+                        ShoparizePartnerCsvHelper::ORDER_PRICE => sprintf(
+                            '%.2f %s',
+                            $product->price,
+                            $currency->iso_code
+                        ),
                         ShoparizePartnerCsvHelper::ORDER_BRAND => $product->manufacturer_name,
                         ShoparizePartnerCsvHelper::ORDER_GTIN => $product->reference,
                         ShoparizePartnerCsvHelper::ORDER_CONDITION => $product->condition,
@@ -98,9 +137,10 @@ class ShoparizePartnerFeed
      * @param $order_way
      * @param $id_category
      * @param $only_active
-     * @param Context|null $context
      * @param $id_shop
+     *
      * @return array|bool|mysqli_result|PDOStatement|resource|void|null
+     *
      * @throws PrestaShopDatabaseException
      * @throws PrestaShopException
      */
@@ -114,25 +154,24 @@ class ShoparizePartnerFeed
         $only_active = false,
         Context $context = null,
         $id_shop = null
-    )
-    {
+    ) {
         if (!$context) {
             $context = Context::getContext();
         }
 
         $front = true;
-        if (!in_array($context->controller->controller_type, array('front', 'modulefront'))) {
+        if (!in_array($context->controller->controller_type, ['front', 'modulefront'])) {
             $front = false;
         }
 
         if (!Validate::isOrderBy($order_by) || !Validate::isOrderWay($order_way)) {
-            die(Tools::displayError());
+            exit(Tools::displayError());
         }
-        if ($order_by == 'id_product' || $order_by == 'price' || $order_by == 'date_add' || $order_by == 'date_upd') {
+        if ('id_product' == $order_by || 'price' == $order_by || 'date_add' == $order_by || 'date_upd' == $order_by) {
             $order_by_prefix = 'p';
-        } elseif ($order_by == 'name') {
+        } elseif ('name' == $order_by) {
             $order_by_prefix = 'pl';
-        } elseif ($order_by == 'position') {
+        } elseif ('position' == $order_by) {
             $order_by_prefix = 'c';
         }
 
@@ -147,16 +186,17 @@ class ShoparizePartnerFeed
                 LEFT JOIN `' . _DB_PREFIX_ . 'product_lang` pl ON (p.`id_product` = pl.`id_product` ' . Shop::addSqlRestrictionOnLang('pl') . ')
                 LEFT JOIN `' . _DB_PREFIX_ . 'manufacturer` m ON (m.`id_manufacturer` = p.`id_manufacturer`)
                 LEFT JOIN `' . _DB_PREFIX_ . 'supplier` s ON (s.`id_supplier` = p.`id_supplier`)' .
-            ($id_category ? 'LEFT JOIN `' . _DB_PREFIX_ . 'category_product` c ON (c.`id_product` = p.`id_product`)' : '') . '
-                WHERE pl.`id_lang` = ' . (int)$id_lang .
-            ($id_category ? ' AND c.`id_category` = ' . (int)$id_category : '') .
+            ($id_category ? 'LEFT JOIN `' . _DB_PREFIX_ . 'category_product` c ON (c.`id_product` = p.`id_product`)' : '') .
+            ' WHERE pl.`id_lang` = ' . (int) $id_lang .
+            ($id_category ? ' AND c.`id_category` = ' . (int) $id_category : '') .
             ($front && $id_shop ? ' AND ps.`visibility` IN ("both", "catalog")' : '') .
             ($only_active ? ' AND product_shop.`active` = 1' : '') .
-            ($id_shop ? ' AND ps.`id_shop` = ' . (int)$id_shop : '') . '
-                ORDER BY ' . (isset($order_by_prefix) ? pSQL($order_by_prefix) . '.' : '') . '`' . pSQL($order_by) . '` ' . pSQL($order_way) .
-            ($limit > 0 ? ' LIMIT ' . (int)$start . ',' . (int)$limit : '');
+            ($id_shop ? ' AND ps.`id_shop` = ' . (int) $id_shop : '') .
+            ' ORDER BY ' . (isset($order_by_prefix) ? pSQL($order_by_prefix) . '.' : '') . '`' . pSQL($order_by) .
+            '` ' . pSQL($order_way) .
+            ($limit > 0 ? ' LIMIT ' . (int) $start . ',' . (int) $limit : '');
         $rq = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($sql);
-        if ($order_by == 'price') {
+        if ('price' == $order_by) {
             Tools::orderbyPrice($rq, $order_way);
         }
 
@@ -168,7 +208,6 @@ class ShoparizePartnerFeed
     }
 
     /**
-     * @param array $images
      * @return mixed|null
      */
     public function findCoverImage(array $images)
@@ -187,11 +226,6 @@ class ShoparizePartnerFeed
         return $cover;
     }
 
-    /**
-     * @param string $productName
-     * @param array $images
-     * @return array
-     */
     public function getAdditionalImageUrl(string $productName, array $images): array
     {
         $urls = [];
@@ -199,18 +233,18 @@ class ShoparizePartnerFeed
             if ($image['cover']) {
                 continue;
             }
-            $urls[] = Context::getContext()->link->getImageLink($productName, $image['id_image'], 'large_default');
+            $urls[] = Context::getContext()->link->getImageLink(
+                $productName,
+                $image['id_image'],
+                ImageType::getFormattedName('large')
+            );
         }
 
         return $urls;
     }
 
-    /**
-     * @param string $data
-     * @return void
-     */
     public function saveToFile(string $data): void
     {
-        file_put_contents(sprintf('%/shoparize_partner_feed.csv', _PS_ROOT_DIR_), $data);
+        file_put_contents(sprintf('%s/shoparize_partner_feed.csv', _PS_ROOT_DIR_), $data);
     }
 }
