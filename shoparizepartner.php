@@ -27,6 +27,8 @@ if (!defined('_PS_VERSION_')) {
     exit;
 }
 
+require_once dirname(__FILE__) . '/include.php';
+
 class Shoparizepartner extends Module
 {
     protected $config_form = false;
@@ -35,7 +37,7 @@ class Shoparizepartner extends Module
     {
         $this->name = 'shoparizepartner';
         $this->tab = 'analytics_stats';
-        $this->version = '1.0.1';
+        $this->version = '1.1.0';
         $this->author = 'Shoparize';
         $this->need_instance = 1;
 
