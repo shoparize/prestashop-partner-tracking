@@ -245,6 +245,8 @@ class ShoparizePartnerFeed
 
     public function saveToFile(string $data): void
     {
-        file_put_contents(sprintf('%s/shoparize_partner_feed.csv', _PS_ROOT_DIR_), $data);
+        $filename = sprintf('%s/shoparize_partner_feed.csv', _PS_ROOT_DIR_);
+        file_put_contents($filename, $data);
+        Tools::chmodr($filename, 0777);
     }
 }
