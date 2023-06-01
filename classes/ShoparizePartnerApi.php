@@ -22,6 +22,20 @@
  * @copyright 2007-2023 shoparize
  * @license   http://www.gnu.org/licenses/gpl-3.0.html (GPLv3 or later License)
  */
-require_once dirname(__FILE__) . '/classes/ShoparizePartnerCsvHelper.php';
-require_once dirname(__FILE__) . '/classes/ShoparizePartnerFeed.php';
-require_once dirname(__FILE__) . '/classes/ShoparizePartnerApi.php';
+trait ShoparizePartnerApi
+{
+    /**
+     * @return bool
+     */
+    public function isAllow(): bool
+    {
+        $header = strtoupper(str_replace('-', '_', 'Shoparize-Partner-Shop-Id'));
+        $shopId = $_SERVER['HTTP_' . $header] ?? null;
+        if ($shopId != Configuration::get('SHOPARIZEPARTNER_SHOP_ID', null, null, Shop::getContextShopID())
+            || $_SERVER['REQUEST_METHOD'] != 'GET') {
+            return false;
+        }
+
+        return true;
+    }
+}

@@ -62,7 +62,7 @@
             <li>{l s='Enable the module' mod='shoparizepartner'}</li>
             <li>{l s='Go to the configuration page of the module' mod='shoparizepartner'}</li>
             <li>{l s='Set your Shoparize Shop ID (Provided by your Integration/Account Contact)' mod='shoparizepartner'}</li>
-        <li>{l s='Configure cron schedule using the row:' mod='shoparizepartner'}<pre style="max-width: 800px">*/30 * * * * php -d memory_limit=-1 -f {_PS_ROOT_DIR_}/modules/shoparizepartner/cron.php</pre></li>
+            {*<li>{l s='Configure cron schedule using the row:' mod='shoparizepartner'}<pre style="max-width: 800px">*/30 * * * * php -d memory_limit=-1 -f {_PS_ROOT_DIR_}/modules/shoparizepartner/cron.php</pre></li>*}
             <li>{l s='Clikc save button' mod='shoparizepartner'}</li>
             <li>{l s='Done' mod='shoparizepartner'}</li>
         </ol>

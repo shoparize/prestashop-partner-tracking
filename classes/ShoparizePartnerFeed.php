@@ -24,109 +24,37 @@
  */
 class ShoparizePartnerFeed
 {
-    protected $csvHelper;
-
+    /**
+     * @var ShoparizePartnerCsvHelper
+     */
+    protected ShoparizePartnerCsvHelper $csvHelper;
     public const AVAILABILITY_IN_STOCK = 'in_stock';
     public const AVAILABILITY_OUT_OF_STOCK = 'out_of_stock';
-
     public function __construct()
     {
         $this->csvHelper = new ShoparizePartnerCsvHelper();
     }
-
-    public function run()
+    public function createFeedFile()
     {
-        $data = [];
-        $cacheKey = 'ShoparizePartnerFeed::run';
-        if (!Cache::isStored($cacheKey)) {
-            foreach (Shop::getShops() as $shop) {
-                $rows = $this->getProducts(
-                    Configuration::get('PS_LANG_DEFAULT'),
-                    0,
-                    0,
-                    'id_product',
-                    'ASC',
-                    null,
-                    null,
-                    null,
-                    $shop['id_shop']
-                );
-
-                $idLang = Configuration::get('PS_LANG_DEFAULT', null, null, $shop['id_shop']);
-                $currency = new Currency(
-                    Configuration::get('PS_CURRENCY_DEFAULT', null, null, $shop['id_shop']),
-                    $idLang,
-                    $shop['id_shop']
-                );
-                foreach ($rows as $row) {
-                    $product = new Product($row['id_product'], false, $idLang, $shop['id_shop']);
-                    $images = $product->getImages(
-                        Configuration::get('PS_LANG_DEFAULT', $idLang, null, $shop['id_shop'])
-                    );
-                    $coverImage = $this->findCoverImage($images);
-                    $additionalImageLink = $this->getAdditionalImageUrl($product->name, $images);
-                    $productLink = Context::getContext()->link->getProductLink(
-                        $row['id_product'],
-                        null,
-                        null,
-                        null,
-                        $idLang,
-                        $shop['id_shop']
-                    );
-                    $row = [
-                        ShoparizePartnerCsvHelper::ORDER_ID => sprintf(
-                            '%s_%d',
-                            Configuration::get('SHOPARIZEPARTNER_SHOP_ID', null, null, $shop['id_shop']),
-                            $product->id
-                        ),
-                        ShoparizePartnerCsvHelper::ORDER_TITLE => $product->name,
-                        ShoparizePartnerCsvHelper::ORDER_DESCRIPTION => strip_tags($product->description),
-                        ShoparizePartnerCsvHelper::ORDER_LINK => $productLink,
-                        ShoparizePartnerCsvHelper::ORDER_IMAGE_LINK => Context::getContext()->link->getImageLink(
-                            $product->link_rewrite,
-                            $coverImage['id_image'],
-                            ImageType::getFormattedName('large')
-                        ),
-                        ShoparizePartnerCsvHelper::ORDER_ADDITIONAL_IMAGE_LINK => $additionalImageLink[0] ?? '',
-                        ShoparizePartnerCsvHelper::ORDER_ADDITIONAL_IMAGE_LINK_2 => $additionalImageLink[1] ?? '',
-                        ShoparizePartnerCsvHelper::ORDER_ADDITIONAL_IMAGE_LINK_3 => $additionalImageLink[2] ?? '',
-                        ShoparizePartnerCsvHelper::ORDER_ADDITIONAL_IMAGE_LINK_4 => $additionalImageLink[3] ?? '',
-                        ShoparizePartnerCsvHelper::ORDER_ADDITIONAL_IMAGE_LINK_5 => $additionalImageLink[4] ?? '',
-                        ShoparizePartnerCsvHelper::ORDER_ADDITIONAL_IMAGE_LINK_6 => $additionalImageLink[5] ?? '',
-                        ShoparizePartnerCsvHelper::ORDER_ADDITIONAL_IMAGE_LINK_7 => $additionalImageLink[6] ?? '',
-                        ShoparizePartnerCsvHelper::ORDER_ADDITIONAL_IMAGE_LINK_8 => $additionalImageLink[7] ?? '',
-                        ShoparizePartnerCsvHelper::ORDER_ADDITIONAL_IMAGE_LINK_9 => $additionalImageLink[8] ?? '',
-                        ShoparizePartnerCsvHelper::ORDER_ADDITIONAL_IMAGE_LINK_10 => $additionalImageLink[9] ?? '',
-                        ShoparizePartnerCsvHelper::ORDER_MOBILE_LINK => $productLink,
-                        ShoparizePartnerCsvHelper::ORDER_AVAILABILITY => StockAvailable::getStockAvailableIdByProductId(
-                            $product->id,
-                            null,
-                            $shop['id_shop']
-                        ) > 0
-                            ? self::AVAILABILITY_IN_STOCK
-                            : self::AVAILABILITY_OUT_OF_STOCK,
-                        ShoparizePartnerCsvHelper::ORDER_PRICE => sprintf(
-                            '%.2f %s',
-                            $product->price,
-                            $currency->iso_code
-                        ),
-                        ShoparizePartnerCsvHelper::ORDER_BRAND => $product->manufacturer_name,
-                        ShoparizePartnerCsvHelper::ORDER_GTIN => $product->reference,
-                        ShoparizePartnerCsvHelper::ORDER_CONDITION => $product->condition,
-                    ];
-
-                    $data[] = $row;
+        foreach (Shop::getShops() as $shop) {
+            $cacheKey = 'ShoparizePartnerFeed::run_' . $shop['id_shop'];
+            if (!Cache::isStored($cacheKey)) {
+                $shoparizePartnerId = Configuration::get('SHOPARIZEPARTNER_SHOP_ID', null, null, $shop['id_shop']);
+                if (empty($shoparizePartnerId)) {
+                    continue;
                 }
+
+                $data = $this->getFeedData($shop['id_shop']);
+
+                Cache::store($cacheKey, [$shoparizePartnerId, $data]);
             }
 
-            Cache::store($cacheKey, $data);
+            list($shoparizePartnerId, $data) = Cache::retrieve($cacheKey);
+
+            $feed = $this->getPartOfFeed($data);
+
+            $this->saveToFile($feed, $shoparizePartnerId);
         }
-
-        $data = Cache::retrieve($cacheKey);
-
-        $this->csvHelper->setData($data);
-        $feed = $this->csvHelper->createFile();
-        $this->saveToFile($feed);
     }
 
     /**
@@ -135,9 +63,10 @@ class ShoparizePartnerFeed
      * @param $limit
      * @param $order_by
      * @param $order_way
-     * @param $id_category
-     * @param $only_active
-     * @param $id_shop
+     * @param bool $id_category
+     * @param bool $only_active
+     * @param Context|null $context
+     * @param null $id_shop
      *
      * @return array|bool|mysqli_result|PDOStatement|resource|void|null
      *
@@ -183,8 +112,9 @@ class ShoparizePartnerFeed
         $sql = 'SELECT p.*, ' . ($id_shop ? ' ps.*, ' : '') . ' pl.* , m.`name` AS manufacturer_name, s.`name` AS supplier_name
                 FROM `' . _DB_PREFIX_ . 'product` p
                 LEFT JOIN `' . _DB_PREFIX_ . 'product_shop` ps ON (p.`id_product` = ps.`id_product`)
-                LEFT JOIN `' . _DB_PREFIX_ . 'product_lang` pl ON (p.`id_product` = pl.`id_product` ' . Shop::addSqlRestrictionOnLang('pl') . ')
-                LEFT JOIN `' . _DB_PREFIX_ . 'manufacturer` m ON (m.`id_manufacturer` = p.`id_manufacturer`)
+                LEFT JOIN `' . _DB_PREFIX_ . 'product_lang` pl ON (p.`id_product` = pl.`id_product` ' .
+            ($id_shop ? ' AND pl.`id_shop` = ' . (int) $id_shop : Shop::addSqlRestrictionOnLang('pl')) .
+            ') LEFT JOIN `' . _DB_PREFIX_ . 'manufacturer` m ON (m.`id_manufacturer` = p.`id_manufacturer`)
                 LEFT JOIN `' . _DB_PREFIX_ . 'supplier` s ON (s.`id_supplier` = p.`id_supplier`)' .
             ($id_category ? 'LEFT JOIN `' . _DB_PREFIX_ . 'category_product` c ON (c.`id_product` = p.`id_product`)' : '') .
             ' WHERE pl.`id_lang` = ' . (int) $id_lang .
@@ -243,10 +173,106 @@ class ShoparizePartnerFeed
         return $urls;
     }
 
-    public function saveToFile(string $data): void
+    public function saveToFile(string $data, string $shoparizePartnerId): void
     {
-        $filename = sprintf('%s/shoparize_partner_feed.csv', _PS_ROOT_DIR_);
+        $filename = sprintf('%s/%s.csv', _PS_ROOT_DIR_, $shoparizePartnerId);
         file_put_contents($filename, $data);
         Tools::chmodr($filename, 0777);
+    }
+
+    /**
+     * @param $shopId
+     * @param int $page
+     * @param int $limit
+     * @return array
+     * @throws PrestaShopDatabaseException
+     * @throws PrestaShopException
+     */
+    public function getFeedData($shopId, int $page = 0, int $limit = 0): array
+    {
+        $page = $page > 1 && $limit > 0 ? ($page - 1) * $limit : 0;
+        $rows = $this->getProducts(
+            Configuration::get('PS_LANG_DEFAULT'),
+            $page,
+            $limit,
+            'id_product',
+            'ASC',
+            null,
+            null,
+            null,
+            $shopId
+        );
+
+        $idLang = Configuration::get('PS_LANG_DEFAULT', null, null, $shopId);
+        $currency = new Currency(
+            Configuration::get('PS_CURRENCY_DEFAULT', null, null, $shopId),
+            $idLang,
+            $shopId
+        );
+        $data = [];
+        foreach ($rows as $row) {
+            $product = new Product($row['id_product'], false, $idLang, $shopId);
+            $images = $product->getImages(
+                Configuration::get('PS_LANG_DEFAULT', $idLang, null, $shopId)
+            );
+            $coverImage = $this->findCoverImage($images);
+            $additionalImageLink = $this->getAdditionalImageUrl($product->name, $images);
+            $productLink = Context::getContext()->link->getProductLink(
+                $row['id_product'],
+                null,
+                null,
+                null,
+                $idLang,
+                $shopId
+            );
+            $row = [
+                ShoparizePartnerCsvHelper::ORDER_ID => $product->id,
+                ShoparizePartnerCsvHelper::ORDER_TITLE => $product->name,
+                ShoparizePartnerCsvHelper::ORDER_DESCRIPTION => strip_tags($product->description),
+                ShoparizePartnerCsvHelper::ORDER_LINK => $productLink,
+                ShoparizePartnerCsvHelper::ORDER_IMAGE_LINK => Context::getContext()->link->getImageLink(
+                    $product->link_rewrite,
+                    $coverImage['id_image'],
+                    ImageType::getFormattedName('large')
+                ),
+                ShoparizePartnerCsvHelper::ORDER_ADDITIONAL_IMAGE_LINK => $additionalImageLink[0] ?? '',
+                ShoparizePartnerCsvHelper::ORDER_ADDITIONAL_IMAGE_LINK_2 => $additionalImageLink[1] ?? '',
+                ShoparizePartnerCsvHelper::ORDER_ADDITIONAL_IMAGE_LINK_3 => $additionalImageLink[2] ?? '',
+                ShoparizePartnerCsvHelper::ORDER_ADDITIONAL_IMAGE_LINK_4 => $additionalImageLink[3] ?? '',
+                ShoparizePartnerCsvHelper::ORDER_ADDITIONAL_IMAGE_LINK_5 => $additionalImageLink[4] ?? '',
+                ShoparizePartnerCsvHelper::ORDER_ADDITIONAL_IMAGE_LINK_6 => $additionalImageLink[5] ?? '',
+                ShoparizePartnerCsvHelper::ORDER_ADDITIONAL_IMAGE_LINK_7 => $additionalImageLink[6] ?? '',
+                ShoparizePartnerCsvHelper::ORDER_ADDITIONAL_IMAGE_LINK_8 => $additionalImageLink[7] ?? '',
+                ShoparizePartnerCsvHelper::ORDER_ADDITIONAL_IMAGE_LINK_9 => $additionalImageLink[8] ?? '',
+                ShoparizePartnerCsvHelper::ORDER_ADDITIONAL_IMAGE_LINK_10 => $additionalImageLink[9] ?? '',
+                ShoparizePartnerCsvHelper::ORDER_MOBILE_LINK => $productLink,
+                ShoparizePartnerCsvHelper::ORDER_AVAILABILITY => StockAvailable::getStockAvailableIdByProductId(
+                    $product->id,
+                    null,
+                    $shopId
+                ) > 0
+                    ? self::AVAILABILITY_IN_STOCK
+                    : self::AVAILABILITY_OUT_OF_STOCK,
+                ShoparizePartnerCsvHelper::ORDER_PRICE => sprintf(
+                    '%.2f %s',
+                    $product->price,
+                    $currency->iso_code
+                ),
+                ShoparizePartnerCsvHelper::ORDER_BRAND => $product->manufacturer_name,
+                ShoparizePartnerCsvHelper::ORDER_GTIN => $product->reference,
+                ShoparizePartnerCsvHelper::ORDER_CONDITION => $product->condition,
+            ];
+
+            $data[] = $row;
+        }
+
+        return $data;
+    }
+
+    public function getPartOfFeed(array $data): string
+    {
+        $this->csvHelper->initFileHeader();
+        $this->csvHelper->setData($data);
+        return $this->csvHelper->createFile();
     }
 }

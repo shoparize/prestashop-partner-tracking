@@ -285,4 +285,28 @@ class Shoparizepartner extends Module
             }
         }
     }
+
+    public function hookModuleRoutes()
+    {
+        return [
+            'module-shoparizepartner-get-feed' => [
+                'rule' => 'shoparize-partner/feeds/{page}/{limit}',
+                'keywords' => [
+                    'page' => [
+                        'regexp' => '[0-9]*',
+                        'param' => 'page',
+                    ],
+                    'limit' => [
+                        'regexp' => '[0-9]*',
+                        'param' => 'limit',
+                    ],
+                ],
+                'controller' => 'feeds',
+                'params' => [
+                    'fc' => 'module',
+                    'module' => 'shoparizepartner',
+                ],
+            ],
+        ];
+    }
 }

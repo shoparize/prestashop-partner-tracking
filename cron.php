@@ -28,5 +28,5 @@ require_once dirname(__FILE__) . '/include.php';
 
 if (Tools::isPHPCLI()) {
     $feed = new ShoparizePartnerFeed();
-    $feed->run();
+    $feed->createFeedFile();
 }

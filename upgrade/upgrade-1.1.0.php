@@ -1,3 +1,4 @@
+
 <?php
 /**
  * 2007-2023 PrestaShop.
@@ -22,6 +23,15 @@
  * @copyright 2007-2023 shoparize
  * @license   http://www.gnu.org/licenses/gpl-3.0.html (GPLv3 or later License)
  */
-require_once dirname(__FILE__) . '/classes/ShoparizePartnerCsvHelper.php';
-require_once dirname(__FILE__) . '/classes/ShoparizePartnerFeed.php';
-require_once dirname(__FILE__) . '/classes/ShoparizePartnerApi.php';
+
+/**
+ * @param Module $module
+ *
+ * @return bool
+ */
+function upgrade_module_1_1_0($module)
+{
+    $module->registerHook('moduleRoutes');
+
+    return true;
+}
