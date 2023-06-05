@@ -36,7 +36,7 @@ class Shoparizepartner extends Module
     {
         $this->name = 'shoparizepartner';
         $this->tab = 'analytics_stats';
-        $this->version = '1.1.0';
+        $this->version = '1.1.1';
         $this->author = 'Shoparize';
         $this->need_instance = 1;
 
@@ -290,17 +290,8 @@ class Shoparizepartner extends Module
     {
         return [
             'module-shoparizepartner-get-feed' => [
-                'rule' => 'shoparize-partner/feeds/{page}/{limit}',
-                'keywords' => [
-                    'page' => [
-                        'regexp' => '[0-9]*',
-                        'param' => 'page',
-                    ],
-                    'limit' => [
-                        'regexp' => '[0-9]*',
-                        'param' => 'limit',
-                    ],
-                ],
+                'rule' => 'shoparize-partner/products',
+                'keywords' => [],
                 'controller' => 'feeds',
                 'params' => [
                     'fc' => 'module',

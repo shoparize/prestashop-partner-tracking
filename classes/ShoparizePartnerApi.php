@@ -29,7 +29,7 @@ trait ShoparizePartnerApi
      */
     public function isAllow(): bool
     {
-        $header = strtoupper(str_replace('-', '_', 'Shoparize-Partner-Shop-Id'));
+        $header = strtoupper(str_replace('-', '_', 'Shoparize-Partner-Key'));
         $shopId = $_SERVER['HTTP_' . $header] ?? null;
         if ($shopId != Configuration::get('SHOPARIZEPARTNER_SHOP_ID', null, null, Shop::getContextShopID())
             || $_SERVER['REQUEST_METHOD'] != 'GET') {

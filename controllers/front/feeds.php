@@ -29,7 +29,7 @@ class ShoparizepartnerFeedsModuleFrontController extends ModuleFrontController
     /**
      * @var ShoparizePartnerFeed
      */
-    protected ShoparizePartnerFeed $shoparizeFeedHelper;
+    protected $shoparizeFeedHelper;
 
     public function __construct()
     {
@@ -50,8 +50,8 @@ class ShoparizepartnerFeedsModuleFrontController extends ModuleFrontController
         }
 
         $shopId = Shop::getContextShopID();
-        $page = Tools::getValue('page', 0);
-        $limit = Tools::getValue('limit', 0);
+        $page = Tools::getValue('page', 1);
+        $limit = Tools::getValue('limit', 100);
 
         $cacheKey = 'ShoparizePartnerFeed::run_' . $shopId . '_' . $page . '_' . $limit;
         if (!Cache::isStored($cacheKey)) {

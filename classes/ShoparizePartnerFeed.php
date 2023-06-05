@@ -27,7 +27,7 @@ class ShoparizePartnerFeed
     /**
      * @var ShoparizePartnerCsvHelper
      */
-    protected ShoparizePartnerCsvHelper $csvHelper;
+    protected $csvHelper;
     public const AVAILABILITY_IN_STOCK = 'in_stock';
     public const AVAILABILITY_OUT_OF_STOCK = 'out_of_stock';
     public function __construct()
