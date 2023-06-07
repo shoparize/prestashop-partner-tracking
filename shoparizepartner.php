@@ -36,7 +36,7 @@ class Shoparizepartner extends Module
     {
         $this->name = 'shoparizepartner';
         $this->tab = 'analytics_stats';
-        $this->version = '1.1.1';
+        $this->version = '1.1.2';
         $this->author = 'Shoparize';
         $this->need_instance = 1;
 
@@ -78,7 +78,8 @@ class Shoparizepartner extends Module
         );
 
         return parent::install() &&
-            $this->registerHook('header');
+            $this->registerHook('header') &&
+            $this->registerHook('moduleRoutes');;
     }
 
     public function uninstall()
