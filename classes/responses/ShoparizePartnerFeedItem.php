@@ -62,6 +62,10 @@ class ShoparizePartnerFeedItem
 
     public $sale_price;
 
+    public $colors;
+
+    public $sizes;
+
     /**
      * @var ShoparizePartnerFeedShipping[]
      */
@@ -227,5 +231,21 @@ class ShoparizePartnerFeedItem
     public function setWeightUnit($weight_unit): void
     {
         $this->weight_unit = $weight_unit;
+    }
+
+    /**
+     * @param mixed $colors
+     */
+    public function setColors($colors): void
+    {
+        $this->colors = $colors;
+    }
+
+    /**
+     * @param mixed $sizes
+     */
+    public function setSizes($sizes): void
+    {
+        $this->sizes = $sizes;
     }
 }

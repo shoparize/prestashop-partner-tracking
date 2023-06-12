@@ -87,7 +87,12 @@ class ShoparizepartnerFeedsModuleFrontController extends ModuleFrontController
         exit;
     }
 
-    public function validateDate($date, $format = 'Y-m-d H:i:s'): bool
+    /**
+     * @param $date
+     * @param string $format
+     * @return bool
+     */
+    public function validateDate($date, string $format = 'Y-m-d H:i:s'): bool
     {
         $d = DateTime::createFromFormat($format, $date);
 

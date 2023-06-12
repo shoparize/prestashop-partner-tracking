@@ -216,6 +216,8 @@ class ShoparizePartnerFeed
 
         $idLang = Configuration::get('PS_LANG_DEFAULT', null, null, $shopId);
         $idCountry = Configuration::get('PS_COUNTRY_DEFAULT', null, null, $shopId);
+        $idColorGroup = Configuration::get('SHOPARIZEPARTNER_COLOR_ATTR_GROUP', null, null, $shopId);
+        $idSizeGroup = Configuration::get('SHOPARIZEPARTNER_SIZE_ATTR_GROUP', null, null, $shopId);
         $currency = new Currency(
             Configuration::get('PS_CURRENCY_DEFAULT', null, null, $shopId),
             $idLang,
@@ -298,11 +300,30 @@ class ShoparizePartnerFeed
                 }
 
                 $item->setShipping($shipping);
+
+                if ($idColorGroup) {
+                    $item->setColors($this->getAttrNamesByGroupId($product, $idColorGroup, $idLang));
+                }
+                if ($idSizeGroup) {
+                    $item->setSizes($this->getAttrNamesByGroupId($product, $idSizeGroup, $idLang));
+                }
             }
             $data[] = $item;
         }
 
         return $data;
+    }
+
+    public function getAttrNamesByGroupId(Product $product, $attrGroupId, $idLang): array
+    {
+        $names = [];
+        foreach ($product->getAttributeCombinations($idLang, $attrGroupId) as $attr) {
+            if ($attr['id_attribute_group'] == $attrGroupId && !in_array($attr['attribute_name'], $names)) {
+                $names[] = $attr['attribute_name'];
+            }
+        }
+
+        return $names;
     }
 
     public function getPartOfFeed(array $data): string
