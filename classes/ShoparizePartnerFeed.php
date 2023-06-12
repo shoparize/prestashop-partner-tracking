@@ -28,12 +28,16 @@ class ShoparizePartnerFeed
      * @var ShoparizePartnerCsvHelper
      */
     protected $csvHelper;
+
     public const AVAILABILITY_IN_STOCK = 'in_stock';
+
     public const AVAILABILITY_OUT_OF_STOCK = 'out_of_stock';
+
     public function __construct()
     {
         $this->csvHelper = new ShoparizePartnerCsvHelper();
     }
+
     public function createFeedFile()
     {
         foreach (Shop::getShops() as $shop) {
@@ -67,6 +71,7 @@ class ShoparizePartnerFeed
      * @param bool $only_active
      * @param Context|null $context
      * @param null $id_shop
+     * @param string $time
      *
      * @return array|bool|mysqli_result|PDOStatement|resource|void|null
      *
@@ -82,7 +87,8 @@ class ShoparizePartnerFeed
         $id_category = false,
         $only_active = false,
         Context $context = null,
-        $id_shop = null
+        $id_shop = null,
+        $time = ''
     ) {
         if (!$context) {
             $context = Context::getContext();
@@ -122,6 +128,7 @@ class ShoparizePartnerFeed
             ($front && $id_shop ? ' AND ps.`visibility` IN ("both", "catalog")' : '') .
             ($only_active ? ' AND product_shop.`active` = 1' : '') .
             ($id_shop ? ' AND ps.`id_shop` = ' . (int) $id_shop : '') .
+            ($time ? ' AND ps.`date_upd` >= "' . pSQL($time) . '"' : '') .
             ' ORDER BY ' . (isset($order_by_prefix) ? pSQL($order_by_prefix) . '.' : '') . '`' . pSQL($order_by) .
             '` ' . pSQL($order_way) .
             ($limit > 0 ? ' LIMIT ' . (int) $start . ',' . (int) $limit : '');
@@ -146,6 +153,7 @@ class ShoparizePartnerFeed
         foreach ($images as $image) {
             if ($image['cover']) {
                 $cover = $image;
+
                 break;
             }
         }
@@ -184,11 +192,13 @@ class ShoparizePartnerFeed
      * @param $shopId
      * @param int $page
      * @param int $limit
+     *
      * @return array
+     *
      * @throws PrestaShopDatabaseException
      * @throws PrestaShopException
      */
-    public function getFeedData($shopId, int $page = 0, int $limit = 0): array
+    public function getFeedData($shopId, int $page = 0, int $limit = 0, string $time = ''): array
     {
         $page = $page > 1 && $limit > 0 ? ($page - 1) * $limit : 0;
         $rows = $this->getProducts(
@@ -200,10 +210,12 @@ class ShoparizePartnerFeed
             null,
             null,
             null,
-            $shopId
+            $shopId,
+            $time
         );
 
         $idLang = Configuration::get('PS_LANG_DEFAULT', null, null, $shopId);
+        $idCountry = Configuration::get('PS_COUNTRY_DEFAULT', null, null, $shopId);
         $currency = new Currency(
             Configuration::get('PS_CURRENCY_DEFAULT', null, null, $shopId),
             $idLang,
@@ -212,9 +224,7 @@ class ShoparizePartnerFeed
         $data = [];
         foreach ($rows as $row) {
             $product = new Product($row['id_product'], false, $idLang, $shopId);
-            $images = $product->getImages(
-                Configuration::get('PS_LANG_DEFAULT', $idLang, null, $shopId)
-            );
+            $images = $product->getImages($idLang);
             $coverImage = $this->findCoverImage($images);
             $additionalImageLink = $this->getAdditionalImageUrl($product->name, $images);
             $productLink = Context::getContext()->link->getProductLink(
@@ -225,45 +235,71 @@ class ShoparizePartnerFeed
                 $idLang,
                 $shopId
             );
-            $row = [
-                ShoparizePartnerCsvHelper::ORDER_ID => $product->id,
-                ShoparizePartnerCsvHelper::ORDER_TITLE => $product->name,
-                ShoparizePartnerCsvHelper::ORDER_DESCRIPTION => strip_tags($product->description),
-                ShoparizePartnerCsvHelper::ORDER_LINK => $productLink,
-                ShoparizePartnerCsvHelper::ORDER_IMAGE_LINK => Context::getContext()->link->getImageLink(
-                    $product->link_rewrite,
-                    $coverImage['id_image'],
-                    ImageType::getFormattedName('large')
-                ),
-                ShoparizePartnerCsvHelper::ORDER_ADDITIONAL_IMAGE_LINK => $additionalImageLink[0] ?? '',
-                ShoparizePartnerCsvHelper::ORDER_ADDITIONAL_IMAGE_LINK_2 => $additionalImageLink[1] ?? '',
-                ShoparizePartnerCsvHelper::ORDER_ADDITIONAL_IMAGE_LINK_3 => $additionalImageLink[2] ?? '',
-                ShoparizePartnerCsvHelper::ORDER_ADDITIONAL_IMAGE_LINK_4 => $additionalImageLink[3] ?? '',
-                ShoparizePartnerCsvHelper::ORDER_ADDITIONAL_IMAGE_LINK_5 => $additionalImageLink[4] ?? '',
-                ShoparizePartnerCsvHelper::ORDER_ADDITIONAL_IMAGE_LINK_6 => $additionalImageLink[5] ?? '',
-                ShoparizePartnerCsvHelper::ORDER_ADDITIONAL_IMAGE_LINK_7 => $additionalImageLink[6] ?? '',
-                ShoparizePartnerCsvHelper::ORDER_ADDITIONAL_IMAGE_LINK_8 => $additionalImageLink[7] ?? '',
-                ShoparizePartnerCsvHelper::ORDER_ADDITIONAL_IMAGE_LINK_9 => $additionalImageLink[8] ?? '',
-                ShoparizePartnerCsvHelper::ORDER_ADDITIONAL_IMAGE_LINK_10 => $additionalImageLink[9] ?? '',
-                ShoparizePartnerCsvHelper::ORDER_MOBILE_LINK => $productLink,
-                ShoparizePartnerCsvHelper::ORDER_AVAILABILITY => StockAvailable::getStockAvailableIdByProductId(
-                    $product->id,
-                    null,
-                    $shopId
-                ) > 0
-                    ? self::AVAILABILITY_IN_STOCK
-                    : self::AVAILABILITY_OUT_OF_STOCK,
-                ShoparizePartnerCsvHelper::ORDER_PRICE => sprintf(
-                    '%.2f %s',
-                    $product->price,
-                    $currency->iso_code
-                ),
-                ShoparizePartnerCsvHelper::ORDER_BRAND => $product->manufacturer_name,
-                ShoparizePartnerCsvHelper::ORDER_GTIN => $product->reference,
-                ShoparizePartnerCsvHelper::ORDER_CONDITION => $product->condition,
-            ];
 
-            $data[] = $row;
+            $item = new ShoparizePartnerFeedItem();
+            $item->setId($product->id);
+            $item->setTitle($product->name);
+            $item->setDescription(strip_tags($product->description_short));
+            $item->setLink($productLink);
+            $item->setMobileLink($productLink);
+            $item->setImage(Context::getContext()->link->getImageLink(
+                $product->link_rewrite,
+                $coverImage['id_image'],
+                ImageType::getFormattedName('large')
+            ));
+            foreach ($additionalImageLink as $image) {
+                $item->setImage($image);
+            }
+            $availability = StockAvailable::getStockAvailableIdByProductId(
+                $product->id,
+                null,
+                $shopId
+            ) > 0
+                ? self::AVAILABILITY_IN_STOCK
+                : self::AVAILABILITY_OUT_OF_STOCK;
+            $item->setAvailability($availability);
+
+            $regularPrice = Product::getPriceStatic($product->id, true, null, 2, null, false, false);
+            $item->setPrice($regularPrice);
+            $item->setCurrencyCode($currency->iso_code);
+            $item->setBrand($product->manufacturer_name);
+            $item->setGtin($product->ean13);
+            $item->setCondition($product->condition);
+            $item->setShippingLength($product->depth);
+            $item->setShippingWidth($product->width);
+            $item->setShippingHeight($product->height);
+            $item->setShippingWeight($product->weight);
+            $item->setSizeUnit(Configuration::get('PS_DIMENSION_UNIT'));
+            $item->setWeightUnit(Configuration::get('PS_WEIGHT_UNIT'));
+
+            $originalPrice = Product::getPriceStatic($product->id, true, null, 2);
+            if ($regularPrice > $originalPrice) {
+                $item->setSalePrice($originalPrice);
+            }
+
+            foreach (Carrier::getAvailableCarrierList($product, null, null, $shopId) as $carrierId) {
+                $shipping = new ShoparizePartnerFeedShipping();
+                $carrier = new Carrier($carrierId, $idLang);
+                $shipping->setService($carrier->name);
+                $shipping->setCountry(Country::getIsoById($idCountry));
+                switch ($carrier->getShippingMethod()) {
+                    case Carrier::SHIPPING_METHOD_FREE:
+                        $shipping->setPrice(0.00);
+
+                        break;
+                    case Carrier::SHIPPING_METHOD_PRICE:
+                        $shipping->setPrice($carrier->getDeliveryPriceByPrice($originalPrice, Country::getIdZone($idCountry)));
+
+                        break;
+                    case Carrier::SHIPPING_METHOD_WEIGHT:
+                        $shipping->setPrice($carrier->getDeliveryPriceByWeight($product->weight, Country::getIdZone($idCountry)));
+
+                        break;
+                }
+
+                $item->setShipping($shipping);
+            }
+            $data[] = $item;
         }
 
         return $data;
@@ -271,8 +307,9 @@ class ShoparizePartnerFeed
 
     public function getPartOfFeed(array $data): string
     {
-        $this->csvHelper->initFileHeader();
+        $this->csvHelper->cleanData();
         $this->csvHelper->setData($data);
+
         return $this->csvHelper->createFile();
     }
 }

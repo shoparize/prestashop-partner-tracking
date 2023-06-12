@@ -31,16 +31,21 @@ class ShoparizepartnerFeedsModuleFrontController extends ModuleFrontController
      */
     protected $shoparizeFeedHelper;
 
+    /**
+     * @var ShoparizePartnerCsvHelper
+     */
+    protected $csvHelper;
+
     public function __construct()
     {
         parent::__construct();
 
         $this->shoparizeFeedHelper = new ShoparizePartnerFeed();
+        $this->csvHelper = new ShoparizePartnerCsvHelper();
     }
 
     /**
-     * @throws PrestaShopDatabaseException
-     * @throws PrestaShopException
+     * @throws Exception
      */
     public function initContent()
     {
@@ -52,21 +57,40 @@ class ShoparizepartnerFeedsModuleFrontController extends ModuleFrontController
         $shopId = Shop::getContextShopID();
         $page = Tools::getValue('page', 1);
         $limit = Tools::getValue('limit', 100);
-
-        $cacheKey = 'ShoparizePartnerFeed::run_' . $shopId . '_' . $page . '_' . $limit;
-        if (!Cache::isStored($cacheKey)) {
-            $data = $this->shoparizeFeedHelper->getFeedData($shopId, $page, $limit);
-            if (empty($data)) {
-                http_response_code(400);
-                exit;
-            }
-            Cache::store($cacheKey, $this->shoparizeFeedHelper->getPartOfFeed($data));
+        $updatedAfter = Tools::getValue('updated_after', '');
+        if (!empty($updatedAfter) && !$this->validateDate($updatedAfter, DateTime::ATOM)) {
+            header('Content-Type: application/json');
+            echo json_encode(['error' => sprintf('shoparize partner error: not valid date: %s, should be: %s', $updatedAfter, DateTime::ATOM)]);
+            exit;
         }
 
-        $feed = Cache::retrieve($cacheKey);
+        if (!empty($updatedAfter)) {
+            $dt = new DateTime($updatedAfter);
+            $dt->setTimezone(new DateTimeZone(Configuration::get('PS_TIMEZONE')));
+            $updatedAfter = $dt->format('Y-m-d H:i:s');
+        }
 
-        header('Content-Type: text/plain');
-        echo $feed;
+        $cacheKey = 'ShoparizePartnerFeed::run_' . $shopId . '_' . $page . '_' . $limit . '_' . $updatedAfter;
+        if (!Cache::isStored($cacheKey)) {
+            try {
+                $response = new ShoparizePartnerFeedResponse();
+                $data = $this->shoparizeFeedHelper->getFeedData($shopId, $page, $limit, $updatedAfter);
+                $response->setItems($data);
+                Cache::store($cacheKey, $response->getJson());
+            } catch (Exception $e) {
+                PrestaShopLogger::addLog(sprintf('shoparize partner error: %s, file: %s, like: %s', $e->getMessage(), $e->getFile(), $e->getLine()));
+            }
+        }
+
+        header('Content-Type: application/json');
+        echo Cache::retrieve($cacheKey);
         exit;
+    }
+
+    public function validateDate($date, $format = 'Y-m-d H:i:s'): bool
+    {
+        $d = DateTime::createFromFormat($format, $date);
+
+        return $d && $d->format($format) == $date;
     }
 }

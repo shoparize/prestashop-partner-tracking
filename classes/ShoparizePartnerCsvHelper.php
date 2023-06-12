@@ -134,11 +134,29 @@ class ShoparizePartnerCsvHelper
         $this->data = array_merge($this->data, $data);
     }
 
+    public function getData()
+    {
+        return $this->data;
+    }
+
     public function initFileHeader()
     {
         $this->data = [];
         $this->data[] = self::FILE_HEADERS;
         ksort($this->data);
+    }
+
+    public function cleanData()
+    {
+        $this->data = [];
+    }
+
+    public function getHeader(): array
+    {
+        $header = self::FILE_HEADERS;
+        ksort($header);
+
+        return $header;
     }
 
     public function createFile(): string
@@ -157,5 +175,18 @@ class ShoparizePartnerCsvHelper
         fclose($handle);
 
         return $contents;
+    }
+
+    public function associateFields()
+    {
+        $headers = $this->getHeader();
+        $associatedData = [];
+        foreach ($this->data as $itemKey => $item) {
+            foreach ($item as $key => $value) {
+                $associatedData[$itemKey][$headers[$key]] = $value;
+            }
+        }
+
+        $this->data = $associatedData;
     }
 }

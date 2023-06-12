@@ -22,10 +22,37 @@
  * @copyright 2007-2023 shoparize
  * @license   http://www.gnu.org/licenses/gpl-3.0.html (GPLv3 or later License)
  */
-require_once dirname(__FILE__) . '/classes/ShoparizePartnerCsvHelper.php';
-require_once dirname(__FILE__) . '/classes/ShoparizePartnerFeed.php';
-require_once dirname(__FILE__) . '/classes/ShoparizePartnerApi.php';
-require_once dirname(__FILE__) . '/classes/ShoparizePartnerFormatter.php';
-require_once dirname(__FILE__) . '/classes/responses/ShoparizePartnerFeedShipping.php';
-require_once dirname(__FILE__) . '/classes/responses/ShoparizePartnerFeedItem.php';
-require_once dirname(__FILE__) . '/classes/responses/ShoparizePartnerFeedResponse.php';
+class ShoparizePartnerFeedShipping
+{
+    use ShoparizePartnerFormatter;
+
+    public $country;
+
+    public $service;
+
+    public $price;
+
+    /**
+     * @param mixed $country
+     */
+    public function setCountry($country): void
+    {
+        $this->country = $country;
+    }
+
+    /**
+     * @param mixed $service
+     */
+    public function setService($service): void
+    {
+        $this->service = $service;
+    }
+
+    /**
+     * @param mixed $price
+     */
+    public function setPrice($price): void
+    {
+        $this->price = $this->priceFormat($price);
+    }
+}
