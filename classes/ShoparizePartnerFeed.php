@@ -271,43 +271,46 @@ class ShoparizePartnerFeed
             $item->setShippingWidth($product->width);
             $item->setShippingHeight($product->height);
             $item->setShippingWeight($product->weight);
-            $item->setSizeUnit(Configuration::get('PS_DIMENSION_UNIT'));
-            $item->setWeightUnit(Configuration::get('PS_WEIGHT_UNIT'));
+            $item->setSizeUnit(Configuration::get('PS_DIMENSION_UNIT', null, null, $shopId));
+            $item->setWeightUnit(Configuration::get('PS_WEIGHT_UNIT', null, null, $shopId));
 
             $originalPrice = Product::getPriceStatic($product->id, true, null, 2);
             if ($regularPrice > $originalPrice) {
                 $item->setSalePrice($originalPrice);
             }
 
+            $shipping = new ShoparizePartnerFeedShipping();
             foreach (Carrier::getAvailableCarrierList($product, null, null, $shopId) as $carrierId) {
-                $shipping = new ShoparizePartnerFeedShipping();
-                $carrier = new Carrier($carrierId, $idLang);
-                $shipping->setService($carrier->name);
-                $shipping->setCountry(Country::getIsoById($idCountry));
-                switch ($carrier->getShippingMethod()) {
-                    case Carrier::SHIPPING_METHOD_FREE:
-                        $shipping->setPrice(0.00);
+                if (Configuration::get('PS_CARRIER_DEFAULT', null, null, $shopId) == $carrierId) {
+                    $carrier = new Carrier($carrierId, $idLang);
+                    $shipping->setService($carrier->name);
+                    $shipping->setCountry(Country::getIsoById($idCountry));
+                    switch ($carrier->getShippingMethod()) {
+                        case Carrier::SHIPPING_METHOD_FREE:
+                            $shipping->setPrice(0.00);
 
-                        break;
-                    case Carrier::SHIPPING_METHOD_PRICE:
-                        $shipping->setPrice($carrier->getDeliveryPriceByPrice($originalPrice, Country::getIdZone($idCountry)));
+                            break;
+                        case Carrier::SHIPPING_METHOD_PRICE:
+                            $shipping->setPrice($carrier->getDeliveryPriceByPrice($originalPrice, Country::getIdZone($idCountry)));
 
-                        break;
-                    case Carrier::SHIPPING_METHOD_WEIGHT:
-                        $shipping->setPrice($carrier->getDeliveryPriceByWeight($product->weight, Country::getIdZone($idCountry)));
+                            break;
+                        case Carrier::SHIPPING_METHOD_WEIGHT:
+                            $shipping->setPrice($carrier->getDeliveryPriceByWeight($product->weight, Country::getIdZone($idCountry)));
 
-                        break;
-                }
-
-                $item->setShipping($shipping);
-
-                if ($idColorGroup) {
-                    $item->setColors($this->getAttrNamesByGroupId($product, $idColorGroup, $idLang));
-                }
-                if ($idSizeGroup) {
-                    $item->setSizes($this->getAttrNamesByGroupId($product, $idSizeGroup, $idLang));
+                            break;
+                    }
+                    break;
                 }
             }
+            $item->setShipping($shipping);
+
+            if ($idColorGroup) {
+                $item->setColors($this->getAttrNamesByGroupId($product, $idColorGroup, $idLang));
+            }
+            if ($idSizeGroup) {
+                $item->setSizes($this->getAttrNamesByGroupId($product, $idSizeGroup, $idLang));
+            }
+
             $data[] = $item;
         }
 

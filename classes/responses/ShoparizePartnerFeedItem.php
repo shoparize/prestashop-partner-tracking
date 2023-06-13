@@ -67,9 +67,9 @@ class ShoparizePartnerFeedItem
     public $sizes;
 
     /**
-     * @var ShoparizePartnerFeedShipping[]
+     * @var ShoparizePartnerFeedShipping
      */
-    public $shipping = [];
+    public $shipping;
 
     public $weight_unit;
 
@@ -222,7 +222,7 @@ class ShoparizePartnerFeedItem
      */
     public function setShipping(ShoparizePartnerFeedShipping $shipping): void
     {
-        $this->shipping[] = $shipping;
+        $this->shipping = $shipping;
     }
 
     /**
