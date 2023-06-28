@@ -32,5 +32,5 @@ var dataLayerShoparize = [order_details_object];
 // });
 
 window.addEventListener('load', function () {
-    SHOPARIZE_API().conv(SHOPARIZEPARTNER_SHOP_ID);
+    SHOPARIZE_API().conv(SHOPARIZEPARTNER_SHOP_ID, true);
 });
