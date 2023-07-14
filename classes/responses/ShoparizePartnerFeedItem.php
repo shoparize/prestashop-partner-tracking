@@ -24,30 +24,54 @@
  */
 class ShoparizePartnerFeedItem
 {
+    use ShoparizePartnerFormatter;
+
     public $id;
+
     public $title;
+
     public $description;
+
     public $link;
+
     public $images = [];
+
     public $mobile_link;
+
     public $availability;
+
     public $price;
+
     public $brand;
+
     public $gtin;
+
     public $condition;
+
     public $currency_code;
-    public $product_length;
-    public $product_width;
-    public $product_height;
-    public $product_weight;
+
+    public $shipping_length;
+
+    public $shipping_width;
+
+    public $shipping_height;
+
+    public $shipping_weight;
+
     public $size_unit;
+
     public $sale_price;
-    public $sale_price_effective_date;
+
+    public $colors;
+
+    public $sizes;
 
     /**
-     * @var ShoparizePartnerFeedShipping[]
+     * @var ShoparizePartnerFeedShipping
      */
-    public $shipping = [];
+    public $shipping;
+
+    public $weight_unit;
 
     /**
      * @param mixed $id
@@ -110,7 +134,7 @@ class ShoparizePartnerFeedItem
      */
     public function setPrice($price): void
     {
-        $this->price = $price;
+        $this->price = $this->priceFormat($price);
     }
 
     /**
@@ -146,35 +170,35 @@ class ShoparizePartnerFeedItem
     }
 
     /**
-     * @param mixed $product_length
+     * @param mixed $shipping_length
      */
-    public function setProductLength($product_length): void
+    public function setShippingLength($shipping_length): void
     {
-        $this->product_length = $product_length;
+        $this->shipping_length = $shipping_length;
     }
 
     /**
-     * @param mixed $product_width
+     * @param mixed $shipping_width
      */
-    public function setProductWidth($product_width): void
+    public function setShippingWidth($shipping_width): void
     {
-        $this->product_width = $product_width;
+        $this->shipping_width = $shipping_width;
     }
 
     /**
-     * @param mixed $product_height
+     * @param mixed $shipping_height
      */
-    public function setProductHeight($product_height): void
+    public function setShippingHeight($shipping_height): void
     {
-        $this->product_height = $product_height;
+        $this->shipping_height = $shipping_height;
     }
 
     /**
-     * @param mixed $product_weight
+     * @param mixed $shipping_weight
      */
-    public function setProductWeight($product_weight): void
+    public function setShippingWeight($shipping_weight): void
     {
-        $this->product_weight = $product_weight;
+        $this->shipping_weight = $shipping_weight;
     }
 
     /**
@@ -190,15 +214,7 @@ class ShoparizePartnerFeedItem
      */
     public function setSalePrice($sale_price): void
     {
-        $this->sale_price = $sale_price;
-    }
-
-    /**
-     * @param mixed $sale_price_effective_date
-     */
-    public function setSalePriceEffectiveDate($sale_price_effective_date): void
-    {
-        $this->sale_price_effective_date = $sale_price_effective_date;
+        $this->sale_price = $this->priceFormat($sale_price);
     }
 
     /**
@@ -206,6 +222,30 @@ class ShoparizePartnerFeedItem
      */
     public function setShipping(ShoparizePartnerFeedShipping $shipping): void
     {
-        $this->shipping[] = $shipping;
+        $this->shipping = $shipping;
+    }
+
+    /**
+     * @param mixed $weight_unit
+     */
+    public function setWeightUnit($weight_unit): void
+    {
+        $this->weight_unit = $weight_unit;
+    }
+
+    /**
+     * @param mixed $colors
+     */
+    public function setColors($colors): void
+    {
+        $this->colors = $colors;
+    }
+
+    /**
+     * @param mixed $sizes
+     */
+    public function setSizes($sizes): void
+    {
+        $this->sizes = $sizes;
     }
 }

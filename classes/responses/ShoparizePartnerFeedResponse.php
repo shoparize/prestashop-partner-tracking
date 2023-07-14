@@ -25,12 +25,13 @@
 class ShoparizePartnerFeedResponse
 {
     /**
-     * @var array $items
+     * @var array
      */
     public $items = [];
 
     /**
      * @param ShoparizePartnerFeedItem $item
+     *
      * @return void
      */
     public function setItem(ShoparizePartnerFeedItem $item)
@@ -40,6 +41,7 @@ class ShoparizePartnerFeedResponse
 
     /**
      * @param array $items
+     *
      * @return void
      */
     public function setItems(array $items)

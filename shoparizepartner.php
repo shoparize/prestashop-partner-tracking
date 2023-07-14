@@ -36,7 +36,7 @@ class Shoparizepartner extends Module
     {
         $this->name = 'shoparizepartner';
         $this->tab = 'analytics_stats';
-        $this->version = '1.1.2';
+        $this->version = '1.1.5';
         $this->author = 'Shoparize';
         $this->need_instance = 1;
 
@@ -69,22 +69,20 @@ class Shoparizepartner extends Module
             Shop::setContext(Shop::CONTEXT_ALL);
         }
 
-        Configuration::updateValue(
-            'SHOPARIZEPARTNER_SHOP_ID',
-            '',
-            false,
-            Context::getContext()->shop->id_shop_group,
-            Context::getContext()->shop->id
-        );
+        Configuration::updateValue('SHOPARIZEPARTNER_SHOP_ID', '');
+        Configuration::updateValue('SHOPARIZEPARTNER_COLOR_ATTR_GROUP', 0);
+        Configuration::updateValue('SHOPARIZEPARTNER_SIZE_ATTR_GROUP', 0);
 
         return parent::install() &&
             $this->registerHook('header') &&
-            $this->registerHook('moduleRoutes');;
+            $this->registerHook('moduleRoutes');
     }
 
     public function uninstall()
     {
         Configuration::deleteByName('SHOPARIZEPARTNER_SHOP_ID');
+        Configuration::deleteByName('SHOPARIZEPARTNER_COLOR_ATTR_GROUP');
+        Configuration::deleteByName('SHOPARIZEPARTNER_SIZE_ATTR_GROUP');
 
         return parent::uninstall();
     }
@@ -141,6 +139,12 @@ class Shoparizepartner extends Module
      */
     protected function getConfigForm()
     {
+        $attributeGroups = AttributeGroup::getAttributesGroups(Context::getContext()->language->id);
+        array_unshift($attributeGroups, [
+            'name' => 'no attribute',
+            'id_attribute_group' => 0,
+        ]);
+
         return [
             'form' => [
                 'legend' => [
@@ -163,6 +167,32 @@ class Shoparizepartner extends Module
                         'name' => 'SHOPARIZEPARTNER_SHOP_ID',
                         'label' => $this->l('Shoparize Shop ID'),
                     ],
+                    [
+                        'type' => 'select',
+                        'label' => $this->l('Color attribute'),
+                        'name' => 'SHOPARIZEPARTNER_COLOR_ATTR_GROUP',
+                        'hint' => $this->l('Select which attribute group is using as color at the shop'),
+                        'col' => '4',
+                        'default_value' => (int) Configuration::get('SHOPARIZEPARTNER_COLOR_ATTR_GROUP'),
+                        'options' => [
+                            'query' => $attributeGroups,
+                            'id' => 'id_attribute_group',
+                            'name' => 'name',
+                        ],
+                    ],
+                    [
+                        'type' => 'select',
+                        'label' => $this->l('Size attribute'),
+                        'name' => 'SHOPARIZEPARTNER_SIZE_ATTR_GROUP',
+                        'hint' => $this->l('Select which attribute group is using as size at the shop'),
+                        'col' => '4',
+                        'default_value' => (int) Configuration::get('SHOPARIZEPARTNER_SIZE_ATTR_GROUP'),
+                        'options' => [
+                            'query' => $attributeGroups,
+                            'id' => 'id_attribute_group',
+                            'name' => 'name',
+                        ],
+                    ],
                 ],
                 'submit' => [
                     'title' => $this->l('Save'),
@@ -183,6 +213,18 @@ class Shoparizepartner extends Module
                 Context::getContext()->shop->id_shop_group,
                 Context::getContext()->shop->id
             ),
+            'SHOPARIZEPARTNER_COLOR_ATTR_GROUP' => Configuration::get(
+                'SHOPARIZEPARTNER_COLOR_ATTR_GROUP',
+                null,
+                Context::getContext()->shop->id_shop_group,
+                Context::getContext()->shop->id
+            ),
+            'SHOPARIZEPARTNER_SIZE_ATTR_GROUP' => Configuration::get(
+                'SHOPARIZEPARTNER_SIZE_ATTR_GROUP',
+                null,
+                Context::getContext()->shop->id_shop_group,
+                Context::getContext()->shop->id
+            ),
         ];
     }
 
@@ -194,6 +236,20 @@ class Shoparizepartner extends Module
         Configuration::updateValue(
             'SHOPARIZEPARTNER_SHOP_ID',
             Tools::getValue('SHOPARIZEPARTNER_SHOP_ID'),
+            false,
+            Context::getContext()->shop->id_shop_group,
+            Context::getContext()->shop->id
+        );
+        Configuration::updateValue(
+            'SHOPARIZEPARTNER_COLOR_ATTR_GROUP',
+            Tools::getValue('SHOPARIZEPARTNER_COLOR_ATTR_GROUP'),
+            false,
+            Context::getContext()->shop->id_shop_group,
+            Context::getContext()->shop->id
+        );
+        Configuration::updateValue(
+            'SHOPARIZEPARTNER_SIZE_ATTR_GROUP',
+            Tools::getValue('SHOPARIZEPARTNER_SIZE_ATTR_GROUP'),
             false,
             Context::getContext()->shop->id_shop_group,
             Context::getContext()->shop->id

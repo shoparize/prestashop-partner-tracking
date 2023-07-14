@@ -57,7 +57,7 @@ class ShoparizepartnerFeedsModuleFrontController extends ModuleFrontController
         $shopId = Shop::getContextShopID();
         $page = Tools::getValue('page', 1);
         $limit = Tools::getValue('limit', 100);
-        $updatedAfter = Tools::getValue('updated_after', '');//DATE_ATOM
+        $updatedAfter = Tools::getValue('updated_after', '');
         if (!empty($updatedAfter) && !$this->validateDate($updatedAfter, DateTime::ATOM)) {
             header('Content-Type: application/json');
             echo json_encode(['error' => sprintf('shoparize partner error: not valid date: %s, should be: %s', $updatedAfter, DateTime::ATOM)]);
@@ -87,9 +87,15 @@ class ShoparizepartnerFeedsModuleFrontController extends ModuleFrontController
         exit;
     }
 
-    function validateDate($date, $format = 'Y-m-d H:i:s'): bool
+    /**
+     * @param $date
+     * @param string $format
+     * @return bool
+     */
+    public function validateDate($date, string $format = 'Y-m-d H:i:s'): bool
     {
         $d = DateTime::createFromFormat($format, $date);
+
         return $d && $d->format($format) == $date;
     }
 }

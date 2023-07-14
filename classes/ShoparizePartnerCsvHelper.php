@@ -138,6 +138,7 @@ class ShoparizePartnerCsvHelper
     {
         return $this->data;
     }
+
     public function initFileHeader()
     {
         $this->data = [];
