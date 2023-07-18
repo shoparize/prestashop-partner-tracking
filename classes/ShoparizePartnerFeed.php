@@ -33,9 +33,9 @@ class ShoparizePartnerFeed
      */
     protected $csvHelper;
 
-    public const AVAILABILITY_IN_STOCK = 'in_stock';
+    const AVAILABILITY_IN_STOCK = 'in_stock';
 
-    public const AVAILABILITY_OUT_OF_STOCK = 'out_of_stock';
+    const AVAILABILITY_OUT_OF_STOCK = 'out_of_stock';
 
     public function __construct()
     {
@@ -168,7 +168,7 @@ class ShoparizePartnerFeed
         return $cover;
     }
 
-    public function getAdditionalImageUrl(string $productName, array $images): array
+    public function getAdditionalImageUrl($productName, array $images)
     {
         $urls = [];
         foreach ($images as $image) {
@@ -185,7 +185,7 @@ class ShoparizePartnerFeed
         return $urls;
     }
 
-    public function saveToFile(string $data, string $shoparizePartnerId): void
+    public function saveToFile($data, $shoparizePartnerId)
     {
         $filename = sprintf('%s/%s.csv', _PS_ROOT_DIR_, $shoparizePartnerId);
         file_put_contents($filename, $data);
@@ -202,7 +202,7 @@ class ShoparizePartnerFeed
      * @throws PrestaShopDatabaseException
      * @throws PrestaShopException
      */
-    public function getFeedData($shopId, int $page = 0, int $limit = 0, string $time = ''): array
+    public function getFeedData($shopId, $page = 0, $limit = 0, $time = '')
     {
         $page = $page > 1 && $limit > 0 ? ($page - 1) * $limit : 0;
         $rows = $this->getProducts(
@@ -321,7 +321,7 @@ class ShoparizePartnerFeed
         return $data;
     }
 
-    public function getAttrNamesByGroupId(Product $product, $attrGroupId, $idLang): array
+    public function getAttrNamesByGroupId(Product $product, $attrGroupId, $idLang)
     {
         $names = [];
         foreach ($product->getAttributeCombinations($idLang, $attrGroupId) as $attr) {
@@ -333,7 +333,7 @@ class ShoparizePartnerFeed
         return $names;
     }
 
-    public function getPartOfFeed(array $data): string
+    public function getPartOfFeed(array $data)
     {
         $this->csvHelper->cleanData();
         $this->csvHelper->setData($data);
