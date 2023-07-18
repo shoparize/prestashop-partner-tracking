@@ -66,8 +66,7 @@ jobs:
 
   deploy:
     needs: ['test']
-#    if: success() && github.event_name == 'push' && github.ref == 'refs/heads/master'
-    if: success()
+    if: success() && github.event_name == 'push' && github.ref == 'refs/heads/master'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2

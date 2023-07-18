@@ -6,9 +6,9 @@ PS_ARCHIVE_NAME = '/tmp/shoparizepartner-'$(PS_VERSION)'.zip'
 .PHONY: build_archive delete_archive
 
 build_archive:
-	composer install
-	zip -r $(PS_ARCHIVE_NAME) .  -x ./tests -x ./phpunit.xml.dist -x ./Makefile
-	zip -r /tmp/shoparizepartner.zip . -x ./tests -x ./phpunit.xml.dist -x ./Makefile
+	composer install --ignore-platform-reqs --no-ansi --no-interaction --no-scripts --no-progress --prefer-dist
+	zip -r $(PS_ARCHIVE_NAME) .  -x ./tests -x ./phpunit.xml.dist -x ./Makefile -x ./composer.json -x ./composer.lock
+	zip -r /tmp/shoparizepartner.zip . -x ./tests -x ./phpunit.xml.dist -x ./Makefile -x ./composer.json -x ./composer.lock
 
 delete_archive:
 	rm -f $(PS_ARCHIVE_NAME)
