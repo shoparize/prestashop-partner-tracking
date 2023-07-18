@@ -88,7 +88,7 @@ lint-docker:
 test:
 ifeq ($(COMPOSERV1),1)
 	cd $(PRESTASHOP_DIR) && php composer.phar run-script create-test-db --timeout=0
-	cd $(ROOT_DIR) && composer install
+	cd $(ROOT_DIR) && composer install --ignore-platform-reqs --no-ansi --no-interaction --no-scripts --no-progress --prefer-dist
 	cd $(PRESTASHOP_DIR) && php vendor/bin/phpunit -c $(ROOT_DIR)/phpunit.xml.dist
 else
 	phpunit -c phpunit.xml.dist
