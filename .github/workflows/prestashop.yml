@@ -52,6 +52,7 @@ jobs:
         env:
           BRANCH: ${{ matrix.branch }}
           COMPOSERV1: ${{ matrix.composerv1 }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: make test
       - name: Coverage
         env:
