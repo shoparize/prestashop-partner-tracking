@@ -1,19 +1,18 @@
 ROOT_DIR=$(shell dirname $(realpath $(lastword $(MAKEFILE_LIST))))
 PRESTASHOP_DIR=$(ROOT_DIR)/PrestaShop
-#FILE = $(ROOT_DIR)/bkn_301_payment/PS_VERSION
 PS_VERSION = `grep -Eo "version = '(.*)'" ./shoparizepartner.php | grep -Eo '([0-9]{1,2}\.[0-9]{1,2}\.[0-9]{1,2})'`
-PS_ARCHIVE_NAME = '/tmp/prestashop_partner_tracking-'$(PS_VERSION)'.zip'
+PS_ARCHIVE_NAME = '/tmp/shoparizepartner-'$(PS_VERSION)'.zip'
 
 .PHONY: build_archive delete_archive
 
 build_archive:
 	composer install
 	zip -r $(PS_ARCHIVE_NAME) .  -x ./tests -x ./phpunit.xml.dist -x ./Makefile
-	zip -r /tmp/prestashop_partner_tracking.zip . -x ./tests -x ./phpunit.xml.dist -x ./Makefile
+	zip -r /tmp/shoparizepartner.zip . -x ./tests -x ./phpunit.xml.dist -x ./Makefile
 
 delete_archive:
 	rm -f $(PS_ARCHIVE_NAME)
-	rm -f /tmp/prestashop_partner_tracking.zip
+	rm -f /tmp/shoparizepartner.zip
 
 composer: clone_prestashop clone_composer fix-version-bugs
 ifeq ($(COMPOSERV1),1)
