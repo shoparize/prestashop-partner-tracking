@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<phpunit
+  bootstrap="tests/bootstrap.php"
+  backupGlobals="false"
+  colors="true"
+  convertErrorsToExceptions="true"
+  convertNoticesToExceptions="true"
+  convertWarningsToExceptions="true"
+  verbose="true"
+  processIsolation="false"
+  stopOnFailure="false"
+  syntaxCheck="true"
+>
+  <testsuites>
+    <testsuite name="PrestaShop Test Suite">
+      <directory suffix="Test.php">tests</directory>
+      <exclude>tests/helpers</exclude>
+    </testsuite>
+  </testsuites>
+  <filter>
+    <whitelist>
+      <exclude>
+        <file>index.php</file>
+        <file>logo.gif</file>
+        <file>logo.png</file>
+        <file>Makefile</file>
+      </exclude>
+    </whitelist>
+  </filter>
+  <logging>
+    <log type="coverage-clover" target="coverage.xml"/>
+  </logging>
+</phpunit>

@@ -22,6 +22,10 @@
  * @copyright 2007-2023 shoparize
  * @license   http://www.gnu.org/licenses/gpl-3.0.html (GPLv3 or later License)
  */
+
+use Shoparize\PartnerPluginProductApi\Responses\FeedItem;
+use Shoparize\PartnerPluginProductApi\Responses\FeedShipping;
+
 class ShoparizePartnerFeed
 {
     /**
@@ -238,7 +242,7 @@ class ShoparizePartnerFeed
                 $shopId
             );
 
-            $item = new ShoparizePartnerFeedItem();
+            $item = new FeedItem();
             $item->setId($product->id);
             $item->setTitle($product->name);
             $item->setDescription(strip_tags($product->description_short));
@@ -279,7 +283,7 @@ class ShoparizePartnerFeed
                 $item->setSalePrice($originalPrice);
             }
 
-            $shipping = new ShoparizePartnerFeedShipping();
+            $shipping = new FeedShipping();
             foreach (Carrier::getAvailableCarrierList($product, null, null, $shopId) as $carrierId) {
                 if (Configuration::get('PS_CARRIER_DEFAULT', null, null, $shopId) == $carrierId) {
                     $carrier = new Carrier($carrierId, $idLang);

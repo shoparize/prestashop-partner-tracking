@@ -22,10 +22,12 @@
  * @copyright 2007-2023 shoparize
  * @license   http://www.gnu.org/licenses/gpl-3.0.html (GPLv3 or later License)
  */
+
+use Shoparize\PartnerPluginProductApi\Helper;
+use Shoparize\PartnerPluginProductApi\Responses\FeedResponse;
+
 class ShoparizepartnerFeedsModuleFrontController extends ModuleFrontController
 {
-    use ShoparizePartnerApi;
-
     /**
      * @var ShoparizePartnerFeed
      */
@@ -36,12 +38,19 @@ class ShoparizepartnerFeedsModuleFrontController extends ModuleFrontController
      */
     protected $csvHelper;
 
+    /**
+     * @var Helper
+     */
+    protected $shoparizeHelper;
+
     public function __construct()
     {
         parent::__construct();
 
         $this->shoparizeFeedHelper = new ShoparizePartnerFeed();
         $this->csvHelper = new ShoparizePartnerCsvHelper();
+
+        $this->shoparizeHelper = new Helper(Configuration::get('SHOPARIZEPARTNER_SHOP_ID', null, null, Shop::getContextShopID()));
     }
 
     /**
@@ -49,7 +58,7 @@ class ShoparizepartnerFeedsModuleFrontController extends ModuleFrontController
      */
     public function initContent()
     {
-        if (!$this->isAllow()) {
+        if (!$this->shoparizeHelper->isAllow()) {
             http_response_code(400);
             exit;
         }
@@ -58,7 +67,7 @@ class ShoparizepartnerFeedsModuleFrontController extends ModuleFrontController
         $page = Tools::getValue('page', 1);
         $limit = Tools::getValue('limit', 100);
         $updatedAfter = Tools::getValue('updated_after', '');
-        if (!empty($updatedAfter) && !$this->validateDate($updatedAfter, DateTime::ATOM)) {
+        if (!empty($updatedAfter) && !$this->shoparizeHelper->validateDate($updatedAfter, DateTime::ATOM)) {
             header('Content-Type: application/json');
             echo json_encode(['error' => sprintf('shoparize partner error: not valid date: %s, should be: %s', $updatedAfter, DateTime::ATOM)]);
             exit;
@@ -73,7 +82,7 @@ class ShoparizepartnerFeedsModuleFrontController extends ModuleFrontController
         $cacheKey = 'ShoparizePartnerFeed::run_' . $shopId . '_' . $page . '_' . $limit . '_' . $updatedAfter;
         if (!Cache::isStored($cacheKey)) {
             try {
-                $response = new ShoparizePartnerFeedResponse();
+                $response = new FeedResponse();
                 $data = $this->shoparizeFeedHelper->getFeedData($shopId, $page, $limit, $updatedAfter);
                 $response->setItems($data);
                 Cache::store($cacheKey, $response->getJson());
@@ -85,17 +94,5 @@ class ShoparizepartnerFeedsModuleFrontController extends ModuleFrontController
         header('Content-Type: application/json');
         echo Cache::retrieve($cacheKey);
         exit;
-    }
-
-    /**
-     * @param $date
-     * @param string $format
-     * @return bool
-     */
-    public function validateDate($date, string $format = 'Y-m-d H:i:s'): bool
-    {
-        $d = DateTime::createFromFormat($format, $date);
-
-        return $d && $d->format($format) == $date;
     }
 }

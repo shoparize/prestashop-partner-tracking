@@ -1,0 +1,24 @@
+{
+    "name": "shoparize/prestashop-partner-tracking",
+    "type": "project",
+    "autoload": {
+        "psr-4": {
+            "Shoparize\\PrestashopPartnerTracking\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "Dzmitry Urbanovich",
+            "email": "dzmitry.urbanovich@shoparize.com"
+        }
+    ],
+    "require": {
+        "shoparize/partner-plugin-product-api": "^1.0"
+    },
+    "repositories": {
+        "shoparize": {
+            "type": "vcs",
+            "url": "git@github.com:shoparize/partner-plugin-product-api.git"
+        }
+    }
+}
