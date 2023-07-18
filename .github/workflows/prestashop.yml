@@ -28,7 +28,10 @@ jobs:
           - 3306/tcp
         options: --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=5
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v1
+        with:
+          fetch-depth: 0 # otherwise, you will failed to push refs to dest repo
+          token: ${{ secrets.GH_REPO_ALLOWED_TOKEN }}
       - name: Setup PHP ${{ matrix.php-version }}
         uses: shivammathur/setup-php@v2
         with:
