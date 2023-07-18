@@ -18,7 +18,7 @@
     "repositories": {
         "shoparize": {
             "type": "vcs",
-            "url": "https://github.com/shoparize/partner-plugin-product-api.git"
+            "url": "git@github.com:shoparize/partner-plugin-product-api.git"
         }
     }
 }

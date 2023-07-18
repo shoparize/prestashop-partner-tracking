@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "5266066a2534779aea145947c06bcdec",
+    "content-hash": "fa32dc3bebc4ea09093a99c2c9a9d5df",
     "packages": [
         {
             "name": "shoparize/partner-plugin-product-api",
