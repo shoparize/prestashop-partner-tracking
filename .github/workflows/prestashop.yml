@@ -83,7 +83,7 @@ jobs:
           git fetch origin --unshallow --tags
           export LAST_TAG=`git describe --abbrev=0 --tags`
           export VERSION=`grep -Eo "version = '(.*)'" ./shoparizepartner.php | grep -Eo '([0-9]{1,2}\.[0-9]{1,2}\.[0-9]{1,2})'`
-          export ARCHIVE_NAME=shoparizepartner-$VERSION.zip
+          export ARCHIVE_NAME=shoparizepartner.zip
           export ARCHIVE_PATH="/tmp/$ARCHIVE_NAME"
           export RELEASE_TAG=$VERSION
           export LAST_COMMIT=`git log --oneline --format=%B -n 1 HEAD | head -n 1`
