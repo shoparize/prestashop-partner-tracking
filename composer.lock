@@ -1,0 +1,54 @@
+{
+    "_readme": [
+        "This file locks the dependencies of your project to a known state",
+        "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
+        "This file is @generated automatically"
+    ],
+    "content-hash": "5266066a2534779aea145947c06bcdec",
+    "packages": [
+        {
+            "name": "shoparize/partner-plugin-product-api",
+            "version": "1.0.0",
+            "source": {
+                "type": "git",
+                "url": "git@github.com:shoparize/partner-plugin-product-api.git",
+                "reference": "8d3d157b480270345b7d2e234d8698470d6ca774"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/shoparize/partner-plugin-product-api/zipball/8d3d157b480270345b7d2e234d8698470d6ca774",
+                "reference": "8d3d157b480270345b7d2e234d8698470d6ca774",
+                "shasum": ""
+            },
+            "require": {
+                "php": "^5.6|^7.0|^8.0"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Shoparize\\PartnerPluginProductApi\\": "src/"
+                }
+            },
+            "authors": [
+                {
+                    "name": "Dzmitry Urbanovich",
+                    "email": "dzmitry.urbanovich@shoparize.com"
+                }
+            ],
+            "support": {
+                "source": "https://github.com/shoparize/partner-plugin-product-api/tree/1.0.0",
+                "issues": "https://github.com/shoparize/partner-plugin-product-api/issues"
+            },
+            "time": "2023-07-17T12:30:00+00:00"
+        }
+    ],
+    "packages-dev": [],
+    "aliases": [],
+    "minimum-stability": "stable",
+    "stability-flags": [],
+    "prefer-stable": false,
+    "prefer-lowest": false,
+    "platform": [],
+    "platform-dev": [],
+    "plugin-api-version": "2.3.0"
+}
