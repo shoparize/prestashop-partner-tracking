@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2023 PrestaShop.
+ * 2022-2023 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -18,8 +18,8 @@
  * versions in the future. If you wish to customize PrestaShop for your
  * needs please refer to http://www.prestashop.com for more information.
  *
- * @author    shoparize <contact@prestashop.com>
- * @copyright 2007-2023 shoparize
+ * @author    shoparize <partner@shoparize.com>
+ * @copyright 2022-2023 shoparize
  * @license   http://www.gnu.org/licenses/gpl-3.0.html (GPLv3 or later License)
  */
 

@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2023 PrestaShop.
+ * 2022-2023 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -18,8 +18,8 @@
  * versions in the future. If you wish to customize PrestaShop for your
  * needs please refer to http://www.prestashop.com for more information.
  *
- * @author    shoparize <contact@prestashop.com>
- * @copyright 2007-2023 shoparize
+ * @author    shoparize <partner@shoparize.com>
+ * @copyright 2022-2023 shoparize
  * @license   http://www.gnu.org/licenses/gpl-3.0.html (GPLv3 or later License)
  */
 if (!defined('_PS_VERSION_')) {
@@ -36,7 +36,7 @@ class Shoparizepartner extends Module
     {
         $this->name = 'shoparizepartner';
         $this->tab = 'analytics_stats';
-        $this->version = '1.1.7';
+        $this->version = '1.1.8';
         $this->author = 'Shoparize';
         $this->need_instance = 1;
 
@@ -73,9 +73,9 @@ class Shoparizepartner extends Module
         Configuration::updateValue('SHOPARIZEPARTNER_COLOR_ATTR_GROUP', 0);
         Configuration::updateValue('SHOPARIZEPARTNER_SIZE_ATTR_GROUP', 0);
 
-        return parent::install() &&
-            $this->registerHook('header') &&
-            $this->registerHook('moduleRoutes');
+        return parent::install()
+            && $this->registerHook('header')
+            && $this->registerHook('moduleRoutes');
     }
 
     public function uninstall()
@@ -267,8 +267,8 @@ class Shoparizepartner extends Module
     {
         // force to only load on front office
         if (
-            'front' == $this->context->controller->controller_type ||
-            'modulefront' == $this->context->controller->controller_type
+            'front' == $this->context->controller->controller_type
+            || 'modulefront' == $this->context->controller->controller_type
         ) {
             // get shop id
             $SHOPARIZEPARTNER_SHOP_ID = Configuration::get(

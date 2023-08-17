@@ -4,20 +4,20 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "fa32dc3bebc4ea09093a99c2c9a9d5df",
+    "content-hash": "ded6ba61df9eb67210ecc945baaef1e1",
     "packages": [
         {
             "name": "shoparize/partner-plugin-product-api",
-            "version": "1.0.0",
+            "version": "1.0.1",
             "source": {
                 "type": "git",
-                "url": "git@github.com:shoparize/partner-plugin-product-api.git",
-                "reference": "8d3d157b480270345b7d2e234d8698470d6ca774"
+                "url": "https://github.com/shoparize/partner-plugin-product-api.git",
+                "reference": "085e9e863ad0e35e1e78d63eeb6aad9839548537"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/shoparize/partner-plugin-product-api/zipball/8d3d157b480270345b7d2e234d8698470d6ca774",
-                "reference": "8d3d157b480270345b7d2e234d8698470d6ca774",
+                "url": "https://api.github.com/repos/shoparize/partner-plugin-product-api/zipball/085e9e863ad0e35e1e78d63eeb6aad9839548537",
+                "reference": "085e9e863ad0e35e1e78d63eeb6aad9839548537",
                 "shasum": ""
             },
             "require": {
@@ -36,10 +36,10 @@
                 }
             ],
             "support": {
-                "source": "https://github.com/shoparize/partner-plugin-product-api/tree/1.0.0",
+                "source": "https://github.com/shoparize/partner-plugin-product-api/tree/1.0.1",
                 "issues": "https://github.com/shoparize/partner-plugin-product-api/issues"
             },
-            "time": "2023-07-17T12:30:00+00:00"
+            "time": "2023-08-16T09:14:16+00:00"
         }
     ],
     "packages-dev": [],
@@ -48,7 +48,9 @@
     "stability-flags": [],
     "prefer-stable": false,
     "prefer-lowest": false,
-    "platform": [],
+    "platform": {
+        "php": ">=5.6|>=7.0|>=8.0"
+    },
     "platform-dev": [],
-    "plugin-api-version": "2.3.0"
+    "plugin-api-version": "1.1.0"
 }
