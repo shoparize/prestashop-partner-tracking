@@ -13,12 +13,17 @@
         }
     ],
     "require": {
-        "shoparize/partner-plugin-product-api": "^1.0"
+        "php": ">=5.6|>=7.0|>=8.0",
+        "shoparize/partner-plugin-product-api": "^1.0",
+        "prestashop/autoindex": "1.0"
     },
     "repositories": {
         "shoparize": {
             "type": "vcs",
-            "url": "git@github.com:shoparize/partner-plugin-product-api.git"
+            "url": "https://github.com/shoparize/partner-plugin-product-api.git"
         }
+    },
+    "config": {
+        "prepend-autoloader": false
     }
 }
