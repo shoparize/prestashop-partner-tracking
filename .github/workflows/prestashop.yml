@@ -16,7 +16,7 @@ jobs:
         include:
           - php-version: '7.4'
             branch: '1.7.4.0'
-            composerv1: 1
+            composerv1: 2
             phpunit-version: 'phpunit:9'
 
     services:
