@@ -29,10 +29,10 @@ clone_prestashop:
 	cd $(PRESTASHOP_DIR) && git checkout $(BRANCH)
 
 clone_composer:
-ifeq ($(COMPOSERV1),1)
+#ifeq ($(COMPOSERV1),1)
 	cd $(PRESTASHOP_DIR) \
         && php -r "copy('https://getcomposer.org/download/1.10.17/composer.phar', 'composer.phar');"
-endif
+#endif
 
 before_script: composer
 ifneq ("$(wildcard $(PRESTASHOP_DIR)/travis-scripts/install-prestashop)","")
