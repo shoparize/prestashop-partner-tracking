@@ -18,11 +18,11 @@ delete_archive:
 	rm -f /tmp/shoparizepartner.zip
 
 composer: clone_prestashop clone_composer fix-version-bugs
-ifeq ($(COMPOSERV1),1)
+#ifeq ($(COMPOSERV1),1)
 	cd $(PRESTASHOP_DIR) && php composer.phar install --prefer-dist --no-interaction --no-progress
-else
-	cd $(PRESTASHOP_DIR)/tests && composer install
-endif
+#else
+	#cd $(PRESTASHOP_DIR)/tests && composer install
+#endif
 
 clone_prestashop:
 	cd $(ROOT_DIR)/ && git clone https://github.com/PrestaShop/PrestaShop
@@ -88,13 +88,13 @@ lint-docker:
 
 	# todo moveto version
 test:
-ifeq ($(COMPOSERV1),1)
+#ifeq ($(COMPOSERV1),1)
 	cd $(PRESTASHOP_DIR) && php composer.phar run-script create-test-db --timeout=0
 	cd $(ROOT_DIR) && composer install --ignore-platform-reqs --no-ansi --no-interaction --no-scripts --no-progress --prefer-dist
 	cd $(PRESTASHOP_DIR) && php vendor/bin/phpunit -c $(ROOT_DIR)/phpunit.xml.dist
-else
-	phpunit -c phpunit.xml.dist
-endif
+#else
+	#phpunit -c phpunit.xml.dist
+#endif
 
 coverage:
 	wget https://phar.phpunit.de/phpcov-2.0.2.phar && php phpcov-2.0.2.phar merge coverage/ --clover coverage.xml
