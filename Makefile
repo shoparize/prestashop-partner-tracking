@@ -6,7 +6,7 @@ PS_ARCHIVE_NAME = '/tmp/shoparizepartner-'$(PS_VERSION)'.zip'
 .PHONY: build_archive delete_archive
 
 build_archive:
-	composer install --ignore-platform-reqs --no-ansi --no-interaction --no-scripts --no-progress --prefer-dist
+	composer install --no-interaction
 	cp ./index.php ./vendor/prestashop/autoindex/assets
 	php -f ./vendor/bin/autoindex prestashop:add:index .
 	composer remove prestashop/autoindex
