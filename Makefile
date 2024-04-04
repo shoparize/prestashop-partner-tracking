@@ -7,9 +7,9 @@ PS_ARCHIVE_NAME = '/tmp/shoparizepartner-'$(PS_VERSION)'.zip'
 
 build_archive:
 	composer install --ignore-platform-reqs --no-ansi --no-interaction --no-scripts --no-progress --prefer-dist
-	cp ./index.php ./vendor/prestashop/autoindex/assets
-	php -f ./vendor/bin/autoindex prestashop:add:index .
-	composer remove prestashop/autoindex
+#	cp ./index.php ./vendor/prestashop/autoindex/assets
+#	php -f ./vendor/bin/autoindex prestashop:add:index .
+#	composer remove prestashop/autoindex
 	zip -r $(PS_ARCHIVE_NAME) .  -x ./tests/**\* -x ./phpunit.xml.dist -x ./Makefile -x ./composer.json -x ./composer.lock -x ./.git/**\* -x ./.github/**\* -x ./.gitignore
 	zip -r /tmp/shoparizepartner.zip . -x ./tests/**\* -x ./phpunit.xml.dist -x ./Makefile -x ./composer.json -x ./composer.lock -x ./.git/**\* -x ./.github/**\* -x ./.gitignore
 
