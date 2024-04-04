@@ -22,6 +22,10 @@
  * @copyright 2022-2023 shoparize
  * @license   http://www.gnu.org/licenses/gpl-3.0.html (GPLv3 or later License)
  */
+if (!defined('_PS_VERSION_')) {
+    exit;
+}
+
 require_once dirname(__FILE__) . '/vendor/autoload.php';
 require_once dirname(__FILE__) . '/classes/ShoparizePartnerCsvHelper.php';
 require_once dirname(__FILE__) . '/classes/ShoparizePartnerFeed.php';

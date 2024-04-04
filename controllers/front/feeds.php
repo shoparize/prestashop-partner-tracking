@@ -22,6 +22,9 @@
  * @copyright 2022-2023 shoparize
  * @license   http://www.gnu.org/licenses/gpl-3.0.html (GPLv3 or later License)
  */
+if (!defined('_PS_VERSION_')) {
+    exit;
+}
 
 use Shoparize\PartnerPluginProductApi\Helper;
 use Shoparize\PartnerPluginProductApi\Responses\FeedResponse;
