@@ -22,6 +22,9 @@
  * @copyright 2022-2023 shoparize
  * @license   http://www.gnu.org/licenses/gpl-3.0.html (GPLv3 or later License)
  */
+if (!defined('_PS_VERSION_')) {
+    exit;
+}
 
 use Shoparize\PartnerPluginProductApi\Responses\FeedItem;
 use Shoparize\PartnerPluginProductApi\Responses\FeedShipping;
@@ -90,7 +93,7 @@ class ShoparizePartnerFeed
         $order_way,
         $id_category = false,
         $only_active = false,
-        Context $context = null,
+        ?Context $context = null,
         $id_shop = null,
         $time = ''
     ) {
