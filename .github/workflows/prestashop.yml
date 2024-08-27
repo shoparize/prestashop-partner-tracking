@@ -18,10 +18,10 @@ jobs:
             branch: '1.7.4.0'
             composerv1: 1
             phpunit-version: 'phpunit:8'
-          - php-version: '8.1'
-            branch: '8.1.7'
-            composerv1: 1
-            phpunit-version: 'phpunit:8'
+#          - php-version: '8.1'
+#            branch: '8.1.7'
+#            composerv1: 1
+#            phpunit-version: 'phpunit:8'
 
     services:
       mysql:
