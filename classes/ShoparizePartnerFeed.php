@@ -26,8 +26,8 @@ if (!defined('_PS_VERSION_')) {
     exit;
 }
 
-use api\src\Responses\FeedItem;
-use api\src\Responses\FeedShipping;
+use Shoparize\PartnerPluginProductApi\Responses\FeedItem;
+use Shoparize\PartnerPluginProductApi\Responses\FeedShipping;
 
 class ShoparizePartnerFeed
 {
@@ -181,7 +181,7 @@ class ShoparizePartnerFeed
             $urls[] = Context::getContext()->link->getImageLink(
                 $productName,
                 $image['id_image'],
-                ImageType::getFormattedName('large')
+                'default'
             );
         }
 
@@ -254,7 +254,7 @@ class ShoparizePartnerFeed
             $item->setImage(Context::getContext()->link->getImageLink(
                 $product->link_rewrite,
                 $coverImage['id_image'],
-                ImageType::getFormattedName('large')
+                'default'
             ));
             foreach ($additionalImageLink as $image) {
                 $item->setImage($image);

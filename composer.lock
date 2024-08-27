@@ -163,12 +163,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/shoparize/partner-plugin-product-api.git",
-                "reference": "42b8d04720ceb4a2a0d49455976dee3f4ebea82a"
+                "reference": "ce58de58ebaa6709c6eb262a1b4a1127115204ed"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/shoparize/partner-plugin-product-api/zipball/42b8d04720ceb4a2a0d49455976dee3f4ebea82a",
-                "reference": "42b8d04720ceb4a2a0d49455976dee3f4ebea82a",
+                "url": "https://api.github.com/repos/shoparize/partner-plugin-product-api/zipball/ce58de58ebaa6709c6eb262a1b4a1127115204ed",
+                "reference": "ce58de58ebaa6709c6eb262a1b4a1127115204ed",
                 "shasum": ""
             },
             "require": {
@@ -190,7 +190,7 @@
                 "source": "https://github.com/shoparize/partner-plugin-product-api/tree/php5.6",
                 "issues": "https://github.com/shoparize/partner-plugin-product-api/issues"
             },
-            "time": "2024-08-27T09:56:28+00:00"
+            "time": "2024-08-27T10:31:18+00:00"
         },
         {
             "name": "symfony/console",
