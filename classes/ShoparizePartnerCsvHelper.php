@@ -28,73 +28,73 @@ if (!defined('_PS_VERSION_')) {
 
 class ShoparizePartnerCsvHelper
 {
-    public const ORDER_ID = 0;
+    const ORDER_ID = 0;
 
-    public const HEADER_ID = 'id';
+    const HEADER_ID = 'id';
 
-    public const ORDER_TITLE = 1;
+    const ORDER_TITLE = 1;
 
-    public const HEADER_TITLE = 'title';
+    const HEADER_TITLE = 'title';
 
-    public const ORDER_DESCRIPTION = 2;
+    const ORDER_DESCRIPTION = 2;
 
-    public const HEADER_DESCRIPTION = 'description';
+    const HEADER_DESCRIPTION = 'description';
 
-    public const ORDER_LINK = 3;
+    const ORDER_LINK = 3;
 
-    public const HEADER_LINK = 'link';
+    const HEADER_LINK = 'link';
 
-    public const ORDER_IMAGE_LINK = 4;
+    const ORDER_IMAGE_LINK = 4;
 
-    public const HEADER_IMAGE_LINK = 'image link';
+    const HEADER_IMAGE_LINK = 'image link';
 
-    public const ORDER_ADDITIONAL_IMAGE_LINK = 5;
+    const ORDER_ADDITIONAL_IMAGE_LINK = 5;
 
-    public const HEADER_ADDITIONAL_IMAGE_LINK = 'additional image link';
+    const HEADER_ADDITIONAL_IMAGE_LINK = 'additional image link';
 
-    public const ORDER_ADDITIONAL_IMAGE_LINK_2 = 6;
+    const ORDER_ADDITIONAL_IMAGE_LINK_2 = 6;
 
-    public const ORDER_ADDITIONAL_IMAGE_LINK_3 = 7;
+    const ORDER_ADDITIONAL_IMAGE_LINK_3 = 7;
 
-    public const ORDER_ADDITIONAL_IMAGE_LINK_4 = 8;
+    const ORDER_ADDITIONAL_IMAGE_LINK_4 = 8;
 
-    public const ORDER_ADDITIONAL_IMAGE_LINK_5 = 9;
+    const ORDER_ADDITIONAL_IMAGE_LINK_5 = 9;
 
-    public const ORDER_ADDITIONAL_IMAGE_LINK_6 = 10;
+    const ORDER_ADDITIONAL_IMAGE_LINK_6 = 10;
 
-    public const ORDER_ADDITIONAL_IMAGE_LINK_7 = 11;
+    const ORDER_ADDITIONAL_IMAGE_LINK_7 = 11;
 
-    public const ORDER_ADDITIONAL_IMAGE_LINK_8 = 12;
+    const ORDER_ADDITIONAL_IMAGE_LINK_8 = 12;
 
-    public const ORDER_ADDITIONAL_IMAGE_LINK_9 = 13;
+    const ORDER_ADDITIONAL_IMAGE_LINK_9 = 13;
 
-    public const ORDER_ADDITIONAL_IMAGE_LINK_10 = 14;
+    const ORDER_ADDITIONAL_IMAGE_LINK_10 = 14;
 
-    public const ORDER_MOBILE_LINK = 15;
+    const ORDER_MOBILE_LINK = 15;
 
-    public const HEADER_MOBILE_LINK = 'mobile link';
+    const HEADER_MOBILE_LINK = 'mobile link';
 
-    public const ORDER_AVAILABILITY = 16;
+    const ORDER_AVAILABILITY = 16;
 
-    public const HEADER_AVAILABILITY = 'availability';
+    const HEADER_AVAILABILITY = 'availability';
 
-    public const ORDER_PRICE = 17;
+    const ORDER_PRICE = 17;
 
-    public const HEADER_PRICE = 'price';
+    const HEADER_PRICE = 'price';
 
-    public const ORDER_BRAND = 18;
+    const ORDER_BRAND = 18;
 
-    public const HEADER_BRAND = 'brand';
+    const HEADER_BRAND = 'brand';
 
-    public const ORDER_GTIN = 19;
+    const ORDER_GTIN = 19;
 
-    public const HEADER_GTIN = 'gtin';
+    const HEADER_GTIN = 'gtin';
 
-    public const ORDER_CONDITION = 20;
+    const ORDER_CONDITION = 20;
 
-    public const HEADER_CONDITION = 'condition';
+    const HEADER_CONDITION = 'condition';
 
-    public const FILE_HEADERS = [
+    const FILE_HEADERS = [
         self::ORDER_ID => self::HEADER_ID,
         self::ORDER_TITLE => self::HEADER_TITLE,
         self::ORDER_DESCRIPTION => self::HEADER_DESCRIPTION,

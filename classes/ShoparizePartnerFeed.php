@@ -26,8 +26,8 @@ if (!defined('_PS_VERSION_')) {
     exit;
 }
 
-use Shoparize\PartnerPluginProductApi\Responses\FeedItem;
-use Shoparize\PartnerPluginProductApi\Responses\FeedShipping;
+use api\src\Responses\FeedItem;
+use api\src\Responses\FeedShipping;
 
 class ShoparizePartnerFeed
 {
@@ -36,9 +36,9 @@ class ShoparizePartnerFeed
      */
     protected $csvHelper;
 
-    public const AVAILABILITY_IN_STOCK = 'in_stock';
+    const AVAILABILITY_IN_STOCK = 'in_stock';
 
-    public const AVAILABILITY_OUT_OF_STOCK = 'out_of_stock';
+    const AVAILABILITY_OUT_OF_STOCK = 'out_of_stock';
 
     public function __construct()
     {
@@ -93,7 +93,7 @@ class ShoparizePartnerFeed
         $order_way,
         $id_category = false,
         $only_active = false,
-        ?Context $context = null,
+        Context $context = null,
         $id_shop = null,
         $time = ''
     ) {

@@ -36,7 +36,7 @@ class Shoparizepartner extends Module
     {
         $this->name = 'shoparizepartner';
         $this->tab = 'analytics_stats';
-        $this->version = '1.2.0';
+        $this->version = '1.0.0';
         $this->author = 'Shoparize';
         $this->need_instance = 1;
 
@@ -55,8 +55,8 @@ class Shoparizepartner extends Module
 
         $this->confirmUninstall = $this->l('Are you sure you want to uninstall my module?');
 
-        $this->ps_versions_compliancy = ['min' => '1.7', 'max' => _PS_VERSION_];
-        $this->module_key = 'f585f0c7c635e55e5702fdfda49ac693';
+        $this->ps_versions_compliancy = ['min' => '1.6', 'max' => '1.7'];
+//        $this->module_key = 'f585f0c7c635e55e5702fdfda49ac693';
     }
 
     /**
@@ -284,8 +284,7 @@ class Shoparizepartner extends Module
                 ]
             );
             // include js file to head of the page
-            $this->context->controller->registerJavascript(
-                'shoparize_script',
+            $this->context->controller->addJS(
                 'https://partner-cdn.shoparize.com/js/shoparize.js',
                 [
                     'server' => 'remote',
@@ -293,8 +292,7 @@ class Shoparizepartner extends Module
                 ]
             );
 
-            $this->context->controller->registerJavascript(
-                'shoparize_script_all_front',
+            $this->context->controller->addJS(
                 'modules/' . $this->name . '/views/js/shoparizepartner_all_front.js'
             );
 
@@ -335,8 +333,7 @@ class Shoparizepartner extends Module
                     ]
                 );
 
-                $this->context->controller->registerJavascript(
-                    'shoparizepartner_order_confirmation',
+                $this->context->controller->addJS(
                     'modules/' . $this->name . '/views/js/shoparizepartner_order_confirmation.js'
                 );
             }
