@@ -10,8 +10,7 @@ build_archive:
 #	cp ./index.php ./vendor/prestashop/autoindex/assets
 #	php -f ./vendor/bin/autoindex prestashop:add:index .
 #	composer remove prestashop/autoindex
-	mkdir shoparizepartner
-	cp -r ./* shoparizepartner
+	cd ..
 	rm -rf ./shoparizepartner/tests ./shoparizepartner/phpunit.xml.dist ./shoparizepartner/Makefile ./composer.json ./composer.lock ./shoparizepartner/.git ./shoparizepartner/.github ./shoparizepartner/.gitignore ./shoparizepartner/auth.json ./shoparizepartner/Readme.md
 	zip -r $(PS_ARCHIVE_NAME) shoparizepartner/*
 	zip -r /tmp/shoparizepartner.zip shoparizepartner/*
