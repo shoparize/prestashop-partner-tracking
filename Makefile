@@ -12,12 +12,10 @@ build_archive:
 #	composer remove prestashop/autoindex
 	ls -la ..
 	cd ..
-	mkdir shoparizepartner
-	cp -r prestashop-partner-tracking/* shoparizepartner
 	rm -rf ./shoparizepartner/tests ./shoparizepartner/phpunit.xml.dist ./shoparizepartner/Makefile ./composer.json ./composer.lock ./shoparizepartner/.git ./shoparizepartner/.github ./shoparizepartner/.gitignore ./shoparizepartner/auth.json ./shoparizepartner/Readme.md
 	zip -r $(PS_ARCHIVE_NAME) shoparizepartner/*
 	zip -r /tmp/shoparizepartner.zip shoparizepartner/*
-	cd ./prestashop-partner-tracking
+	cd ./shoparizepartner
 
 delete_archive:
 	rm -f $(PS_ARCHIVE_NAME)
