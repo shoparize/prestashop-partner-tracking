@@ -11,8 +11,8 @@ build_archive:
 #	php -f ./vendor/bin/autoindex prestashop:add:index .
 #	composer remove prestashop/autoindex
 	#rm -rf ./tests ./phpunit.xml.dist ./Makefile ./composer.json ./composer.lock ./.git ./.github ./.gitignore ./auth.json ./Readme.md
-	zip -r $(PS_ARCHIVE_NAME) .  -x ./tests/**\* -x ./phpunit.xml.dist -x ./Makefile -x ./composer.json -x ./composer.lock -x ./.git/**\* -x ./.github/**\* -x ./.gitignore -x ./auth.json -x ./Readme.md
-	zip -r /tmp/shoparizepartner.zip . -x ./tests/**\* -x ./phpunit.xml.dist -x ./Makefile -x ./composer.json -x ./composer.lock -x ./.git/**\* -x ./.github/**\* -x ./.gitignore -x ./auth.json -x ./Readme.md
+	zip -r $(PS_ARCHIVE_NAME) .  -x ./tests/**\* -x ./phpunit.xml.dist -x ./Makefile -x ./.git/**\* -x ./.github/**\* -x ./.gitignore -x ./auth.json -x ./Readme.md
+	zip -r /tmp/shoparizepartner.zip . -x ./tests/**\* -x ./phpunit.xml.dist -x ./Makefile -x ./.git/**\* -x ./.github/**\* -x ./.gitignore -x ./auth.json -x ./Readme.md
 
 delete_archive:
 	rm -f $(PS_ARCHIVE_NAME)
