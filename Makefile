@@ -14,7 +14,7 @@ build_archive:
 	mkdir shoparizepartner
 
 	rsync -Rr ./* ./shoparizepartner
-	rm -rf ./shoparizepartner/tests ./shoparizepartner/phpunit.xml.dist ./shoparizepartner/Makefile ./composer.json ./composer.lock ./shoparizepartner/.git ./shoparizepartner/.github ./shoparizepartner/.gitignore ./shoparizepartner/auth.json ./shoparizepartner/Readme.md
+	rm -rf ./shoparizepartner/tests ./shoparizepartner/phpunit.xml.dist ./shoparizepartner/Makefile ./shoparizepartner/.git ./shoparizepartner/.github ./shoparizepartner/.gitignore ./shoparizepartner/auth.json ./shoparizepartner/Readme.md
 	zip -r $(PS_ARCHIVE_NAME) ./shoparizepartner/*
 	zip -r /tmp/shoparizepartner.zip ./shoparizepartner/*
 	rm -rf ./shoparizepartner
