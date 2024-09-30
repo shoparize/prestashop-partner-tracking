@@ -10,15 +10,14 @@ build_archive:
 #	cp ./index.php ./vendor/prestashop/autoindex/assets
 #	php -f ./vendor/bin/autoindex prestashop:add:index .
 #	composer remove prestashop/autoindex
-	ls -la ..
-	cd ..
 
-	mv prestashop-partner-tracking shoparizepartner
+	mkdir shoparizepartner
+
+	rsync -Rr ./* ./shoparizepartner
 	rm -rf ./shoparizepartner/tests ./shoparizepartner/phpunit.xml.dist ./shoparizepartner/Makefile ./composer.json ./composer.lock ./shoparizepartner/.git ./shoparizepartner/.github ./shoparizepartner/.gitignore ./shoparizepartner/auth.json ./shoparizepartner/Readme.md
-	zip -r $(PS_ARCHIVE_NAME) shoparizepartner/*
-	zip -r /tmp/shoparizepartner.zip shoparizepartner/*
-	mv shoparizepartner prestashop-partner-tracking
-	cd ./prestashop-partner-tracking
+	zip -r $(PS_ARCHIVE_NAME) ./shoparizepartner/*
+	zip -r /tmp/shoparizepartner.zip ./shoparizepartner/*
+	rm -rf ./shoparizepartner
 
 delete_archive:
 	rm -f $(PS_ARCHIVE_NAME)
