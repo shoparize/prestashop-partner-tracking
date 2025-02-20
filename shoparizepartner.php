@@ -36,7 +36,7 @@ class Shoparizepartner extends Module
     {
         $this->name = 'shoparizepartner';
         $this->tab = 'analytics_stats';
-        $this->version = '1.2.7';
+        $this->version = '1.2.9';
         $this->author = 'Shoparize';
         $this->need_instance = 1;
 

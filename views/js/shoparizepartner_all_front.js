@@ -26,10 +26,11 @@
  * to avoid any conflicts with others containers.
  */
 
-// $(document).ready(function () {
-//     SHOPARIZE_API().init(SHOPARIZEPARTNER_SHOP_ID);
-// });
-
 window.addEventListener('load', function () {
-    SHOPARIZE_API().init(SHOPARIZEPARTNER_SHOP_ID);
+    let interval = setInterval(() => {
+        if (typeof window.SHOPARIZE_API != "undefined") {
+            SHOPARIZE_API().init(SHOPARIZEPARTNER_SHOP_ID);
+            clearInterval(interval);
+        }
+    }, 50);
 });
