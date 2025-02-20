@@ -74,7 +74,7 @@ class Shoparizepartner extends Module
         Configuration::updateValue('SHOPARIZEPARTNER_SIZE_ATTR_GROUP', 0);
 
         return parent::install()
-            && $this->registerHook('header')
+            && $this->registerHook('displayHeader')
             && $this->registerHook('moduleRoutes');
     }
 
@@ -263,7 +263,7 @@ class Shoparizepartner extends Module
     /**
      * Add the CSS & JavaScript files you want to be added on the FO.
      */
-    public function hookHeader()
+    public function hookDisplayHeader()
     {
         // force to only load on front office
         if (
